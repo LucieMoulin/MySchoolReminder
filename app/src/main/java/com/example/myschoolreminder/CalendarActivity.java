@@ -2,7 +2,7 @@
  * ETML
  * Authors : Lucie Moulin and Léa Cherpillod
  * Date : 30.10.2019
- * Description : Main Activity
+ * Description : Calendar Activity
  */
 
 package com.example.myschoolreminder;
@@ -23,6 +23,6 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_calendar);
     }
 }
