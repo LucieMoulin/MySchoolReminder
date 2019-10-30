@@ -7,6 +7,7 @@
 
 package com.example.myschoolreminder;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -17,5 +18,15 @@ public class Event {
     /**
      * Schedule
      */
-    private Schedule schedule;
+    private ArrayList<Schedule> schedules;
+
+    /**
+     * Name
+     */
+    private String name;
+
+    /**
+     * Place where the event takes place
+     */
+    private String place;
 }
