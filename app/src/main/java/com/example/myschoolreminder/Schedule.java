@@ -39,4 +39,44 @@ public class Schedule {
         this.endDate = endDate;
         this.repetition = repetition;
     }
+
+    /**
+     * Gets the start date
+     * @param startDate
+     */
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    /**
+     * Gets the start date
+     * @return
+     */
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * Sets the end date
+     * @param endDate
+     */
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    /**
+     * Gets the end date
+     * @return
+     */
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * Gets the repetition
+     * @return
+     */
+    public Repetition getRepetition() {
+        return repetition;
+    }
 }

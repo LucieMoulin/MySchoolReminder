@@ -15,53 +15,6 @@ import java.util.Date;
 public class Repetition {
 
     /**
-     * Types of repetition
-     */
-    public enum RepetitionType{
-        None("Aucune",""),
-        Daily("Journalier","jours"),
-        Weekly("Hebdomadaire", "semaines"),
-        Monthly("Mensuel", "mois"),
-        Yearly("Annuel", "années");
-
-        /**
-         * Name
-         */
-        private String name;
-
-        /**
-         * Every What ? Ex : every day, every week
-         */
-        private String everyWhat;
-
-        /**
-         * Constructor
-         * @param name
-         * @param everyWhat
-         */
-        RepetitionType(String name, String everyWhat){
-            this.name = name;
-            this.everyWhat = everyWhat;
-        }
-
-        /**
-         * Gets the name
-         * @return name
-         */
-        public String getName(){
-            return name;
-        }
-
-        /**
-         * Gets the "every"
-         * @return everyWhat
-         */
-        public String getEveryWhat(){
-            return everyWhat;
-        }
-    }
-
-    /**
      * Amount
      */
     private int amount;
@@ -82,15 +35,22 @@ public class Repetition {
     private int maximum;
 
     /**
+     * Defines if the repetition is active during the holidays
+     */
+    private Boolean isActiveDuringHolidays;
+
+    /**
      * Constructor
      * @param type type of repetition
      * @param amount amount of type (days, weeks, months)
+     * @param isActiveDuringHolidays Defines if it's active during the holidays
      */
-    public Repetition(RepetitionType type, int amount){
+    public Repetition(RepetitionType type, int amount, Boolean isActiveDuringHolidays){
         this.type = type;
         this.amount = amount;
         this.until = null;
         this.maximum = -1;
+        this.isActiveDuringHolidays = isActiveDuringHolidays;
     }
 
     /**
@@ -98,12 +58,14 @@ public class Repetition {
      * @param type type of repetition
      * @param amount amount of type (days, weeks, months)
      * @param until Date when the repetition stops
+     * @param isActiveDuringHolidays Defines if it's active during the holidays
      */
-    public Repetition(RepetitionType type, int amount, Date until){
+    public Repetition(RepetitionType type, int amount, Date until, Boolean isActiveDuringHolidays){
         this.type = type;
         this.amount = amount;
         this.until = until;
         this.maximum = -1;
+        this.isActiveDuringHolidays = isActiveDuringHolidays;
     }
 
     /**
@@ -111,14 +73,93 @@ public class Repetition {
      * @param type type of repetition
      * @param amount amount of type (days, weeks, months)
      * @param maximum Maximum of repetitions
+     * @param isActiveDuringHolidays Defines if it's active during the holidays
      */
-    public Repetition(RepetitionType type, int amount, int maximum){
+    public Repetition(RepetitionType type, int amount, int maximum, Boolean isActiveDuringHolidays){
         this.type = type;
         this.amount = amount;
         this.until = null;
         this.maximum = maximum;
+        this.isActiveDuringHolidays = isActiveDuringHolidays;
     }
 
-    //TODO Faire l'histoire du choix de si ça a lieu pendant les vacances où pas
-}
+    /**
+     * Sets the amount
+     * @param amount
+     */
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 
+    /**
+     * Gets the amount
+     * @return
+     */
+    public int getAmount() {
+        return amount;
+    }
+
+    /**
+     * Sets the type
+     * @param type
+     */
+    public void setType(RepetitionType type) {
+        this.type = type;
+    }
+
+    /**
+     * Gets the type
+     * @return
+     */
+    public RepetitionType getType() {
+        return type;
+    }
+
+    /**
+     * Sets the date when the repetition stops
+     * @param until
+     */
+    public void setUntil(Date until) {
+        this.until = until;
+    }
+
+    /**
+     * Gets the date when the repetition stops
+     * @return
+     */
+    public Date getUntil() {
+        return until;
+    }
+
+    /**
+     * Sets the maximum of repetitions
+     * @param maximum
+     */
+    public void setMaximum(int maximum) {
+        this.maximum = maximum;
+    }
+
+    /**
+     * Gets the maximum of repetitions
+     * @return
+     */
+    public int getMaximum() {
+        return maximum;
+    }
+
+    /**
+     * Sets the boolean that defines if the repetition is active during the holidays
+     * @param activeDuringHolidays
+     */
+    public void setActiveDuringHolidays(Boolean activeDuringHolidays) {
+        isActiveDuringHolidays = activeDuringHolidays;
+    }
+
+    /**
+     * Gets the boolean that defines if the repetition is active during the holidays
+     * @return
+     */
+    public Boolean getActiveDuringHolidays() {
+        return isActiveDuringHolidays;
+    }
+}

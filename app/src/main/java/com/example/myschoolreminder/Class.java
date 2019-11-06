@@ -12,14 +12,59 @@ import java.util.ArrayList;
 /**
  * Class
  */
-public class Class {
+public class Class extends Event{
     /**
-     * Homeworks for this class
+     * Homework for this class
      */
-    private ArrayList<Homework> homeworks;
+    private ArrayList<Homework> homework;
 
     /**
-     * Schedule of the class
+     * Teacher
      */
-    private Schedule schedule;
+    private Teacher teacher;
+
+    /**
+     * Constructor
+     * @param name
+     * @param teacher
+     */
+    public Class(String name, Teacher teacher){
+        super(name, "");
+        this.teacher = teacher;
+    }
+
+    /**
+     * Constructor (with place)
+     * @param name
+     * @param place
+     * @param teacher
+     */
+    public Class(String name, String place, Teacher teacher) {
+        super(name,"", place);
+        this.teacher = teacher;
+    }
+
+    /**
+     * Gets the homework for this class
+     * @return
+     */
+    public ArrayList<Homework> getHomework() {
+        return homework;
+    }
+
+    /**
+     * Adds homework to the class
+     * @param homework
+     */
+    public void addHomeWork(Homework homework){
+        this.homework.add(homework);
+    }
+
+    /**
+     * Changes the teacher for a new one
+     * @param newTeacher
+     */
+    public void changeTeacher(Teacher newTeacher){
+        teacher = newTeacher;
+    }
 }
