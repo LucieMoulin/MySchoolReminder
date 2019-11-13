@@ -7,20 +7,26 @@
 
 package com.example.myschoolreminder;
 
+import android.provider.CalendarContract;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Trip
  */
+@Entity(tableName = "t_trip")
 public class Trip extends Event{
     /**
      * Checklist
      */
-    Map<String, Boolean> checklist;
+    @ColumnInfo(name = "triCheckList")
+    private Map<String, Boolean> checklist;
 
     /**
      * Constructor
@@ -35,14 +41,12 @@ public class Trip extends Event{
         super(name, description, place);
 
         //Creation of the schedule
-        final Repetition repetition = new Repetition(RepetitionType.None, 0, true);
-        Schedule schedule = new Schedule(startDate, endDate, repetition);
-        addSchedule(schedule);
+        Schedule schedule = new Schedule(startDate, endDate, this);
+        Repetition repetition = new Repetition(schedule, RepetitionType.None, 0, true);
 
         //Creation of the checklist
-        this.checklist = new HashMap<String, Boolean>();
-        for(Iterator<String> iterator = checklist.iterator(); iterator.hasNext();){
-            String string = iterator.next();
+        this.checklist = new HashMap<>();
+        for (String string : checklist) {
             this.checklist.put(string, false);
         }
     }

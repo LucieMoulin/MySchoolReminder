@@ -7,21 +7,22 @@
 
 package com.example.myschoolreminder;
 
-import java.util.ArrayList;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+
+import static androidx.room.ForeignKey.SET_DEFAULT;
 
 /**
  * Class
  */
+@Entity(tableName = "t_class", foreignKeys = @ForeignKey(entity = Teacher.class, parentColumns = "idTeacher", childColumns = "fkTeacher", onDelete = SET_DEFAULT))
 public class Class extends Event{
-    /**
-     * Homework for this class
-     */
-    private ArrayList<Homework> homework;
-
     /**
      * Teacher
      */
-    private Teacher teacher;
+    @ColumnInfo(name = "fkTeacher")
+    private int teacherId;
 
     /**
      * Constructor
@@ -30,7 +31,7 @@ public class Class extends Event{
      */
     public Class(String name, Teacher teacher){
         super(name, "");
-        this.teacher = teacher;
+        this.teacherId = teacher.getIdTeacher();
     }
 
     /**
@@ -41,23 +42,7 @@ public class Class extends Event{
      */
     public Class(String name, String place, Teacher teacher) {
         super(name,"", place);
-        this.teacher = teacher;
-    }
-
-    /**
-     * Gets the homework for this class
-     * @return
-     */
-    public ArrayList<Homework> getHomework() {
-        return homework;
-    }
-
-    /**
-     * Adds homework to the class
-     * @param homework
-     */
-    public void addHomeWork(Homework homework){
-        this.homework.add(homework);
+        this.teacherId = teacher.getIdTeacher();
     }
 
     /**
@@ -65,6 +50,6 @@ public class Class extends Event{
      * @param newTeacher
      */
     public void changeTeacher(Teacher newTeacher){
-        teacher = newTeacher;
+        teacherId = newTeacher.getIdTeacher();
     }
 }

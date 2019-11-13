@@ -7,14 +7,19 @@
 
 package com.example.myschoolreminder;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+
 /**
  * Reminder
  */
+@Entity(tableName = "t_reminder")
 public class Reminder extends Event {
 
     /**
      * Defines if the action in the reminder is isDone
      */
+    @ColumnInfo(name = "remIsDone")
     private Boolean isDone;
 
     /**

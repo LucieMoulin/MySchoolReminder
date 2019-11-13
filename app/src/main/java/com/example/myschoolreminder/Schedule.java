@@ -7,37 +7,55 @@
 
 package com.example.myschoolreminder;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
 import java.util.Date;
+
+import static androidx.room.ForeignKey.CASCADE;
 
 /**
  * Schedule
  */
+@Entity(tableName = "t_schedule", foreignKeys = @ForeignKey(entity = Event.class, parentColumns = "idEvent", childColumns = "fkEvent", onDelete = CASCADE))
 public class Schedule {
+
+    /**
+     * Id
+     */
+    @PrimaryKey(autoGenerate = true)
+    private int idSchedule;
+
     /**
      * Start date
      */
+    @ColumnInfo(name = "schStartDate")
     private Date startDate;
 
     /**
      * End date
      */
+    @ColumnInfo(name = "schEndDate")
     private Date endDate;
 
     /**
-     * Repetition
+     * Event id
      */
-    private Repetition repetition;
+    @ColumnInfo(name = "fkEvent")
+    private int eventId;
 
     /**
      * Constructor
      * @param startDate Start date
      * @param endDate End date
-     * @param repetition Repetition
+     * @param event
      */
-    public Schedule(Date startDate, Date endDate, Repetition repetition){
+    public Schedule(Date startDate, Date endDate, Event event){
         this.startDate = startDate;
         this.endDate = endDate;
-        this.repetition = repetition;
+        this.eventId = event.getIdEvent();
     }
 
     /**
@@ -73,10 +91,18 @@ public class Schedule {
     }
 
     /**
-     * Gets the repetition
+     * Gets the id
      * @return
      */
-    public Repetition getRepetition() {
-        return repetition;
+    public int getIdSchedule() {
+        return idSchedule;
+    }
+
+    /**
+     * Gets the event id
+     * @return
+     */
+    public int getEventId() {
+        return eventId;
     }
 }

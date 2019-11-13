@@ -7,18 +7,32 @@
 
 package com.example.myschoolreminder;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 /**
  * Teacher
  */
+@Entity(tableName = "t_teacher")
 public class Teacher {
+
+    /**
+     * id
+     */
+    @PrimaryKey(autoGenerate = true)
+    private int idTeacher;
+
     /**
      * Last name
      */
+    @ColumnInfo(name = "teaLastName")
     private String lastName;
 
     /**
      * First name
      */
+    @ColumnInfo(name = "teaFirstName")
     private String firstName;
 
     /**
@@ -61,5 +75,13 @@ public class Teacher {
      */
     public String getFirstName() {
         return firstName;
+    }
+
+    /**
+     * Gets the id
+     * @return
+     */
+    public int getIdTeacher() {
+        return idTeacher;
     }
 }

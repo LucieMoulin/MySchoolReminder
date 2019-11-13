@@ -7,6 +7,9 @@
 
 package com.example.myschoolreminder;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 /**
  * Types of repetition
  */
@@ -16,6 +19,12 @@ public enum RepetitionType{
     Weekly("Hebdomadaire", "semaines"),
     Monthly("Mensuel", "mois"),
     Yearly("Annuel", "années");
+
+    /**
+     * id
+     */
+    @PrimaryKey(autoGenerate = true)
+    private int idRepetitionType;
 
     /**
      * Name

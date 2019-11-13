@@ -7,14 +7,22 @@
 
 package com.example.myschoolreminder;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+
+import static androidx.room.ForeignKey.CASCADE;
+
 /**
  * HomeWork
  */
+@Entity(tableName = "t_homework", foreignKeys = @ForeignKey(entity = Class.class, parentColumns = "idClass", childColumns = "fkClass", onDelete = CASCADE))
 public class Homework extends Reminder{
     /**
      * Class for which this homework is
      */
-    private Class container;
+    @ColumnInfo(name = "fkClass")
+    private int classId;
 
     /**
      * Constructor
@@ -24,6 +32,14 @@ public class Homework extends Reminder{
      */
     public Homework(String name, String description, Class container) {
         super(name, description);
-        this.container = container;
+        this.classId = container.getIdEvent();
+    }
+
+    /**
+     * Gets the class id
+     * @return
+     */
+    public int getClassId() {
+        return classId;
     }
 }

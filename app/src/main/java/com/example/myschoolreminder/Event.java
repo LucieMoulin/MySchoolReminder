@@ -7,13 +7,17 @@
 
 package com.example.myschoolreminder;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Date;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
+import static androidx.room.ForeignKey.CASCADE;
 
 /**
  * Event
  */
+ @Entity(tableName = "t_event")
 public class Event {
 
     /**
@@ -22,23 +26,27 @@ public class Event {
     private static final String UNSPECIFIED_PLACE = "Non spécifié";
 
     /**
-     * Schedule
+     * Id
      */
-    private ArrayList<Schedule> schedules;
+    @PrimaryKey(autoGenerate = true)
+    private int idEvent;
 
     /**
      * Name
      */
+    @ColumnInfo(name = "eveName")
     private String name;
 
     /**
      * Description
      */
+    @ColumnInfo(name = "eveDescription")
     private String description;
 
     /**
      * Place where the event takes place
      */
+    @ColumnInfo(name = "evePlace")
     private String place;
 
     /**
@@ -47,7 +55,6 @@ public class Event {
      * @param description
      */
     public Event(String name, String description){
-        this.schedules = new ArrayList<Schedule>();
         this.name = name;
         this.description = description;
         this.place = UNSPECIFIED_PLACE;
@@ -60,26 +67,9 @@ public class Event {
      * @param place place where the event takes place
      */
     public Event(String name, String description, String place){
-        this.schedules = new ArrayList<Schedule>();
         this.name = name;
         this.description = description;
         this.place = place;
-    }
-
-    /**
-     * Adds a schedule to the event
-     * @param schedule
-     */
-    public void addSchedule(Schedule schedule){
-        schedules.add(schedule);
-    }
-
-    /**
-     * Getter for the schedules
-     * @return
-     */
-    public ArrayList<Schedule> getSchedules(){
-        return schedules;
     }
 
     /**
@@ -130,5 +120,11 @@ public class Event {
         this.place = place;
     }
 
-    //TODO retirer/modifier un schedule
+    /**
+     * Gets the id
+     * @return
+     */
+    public int getIdEvent() {
+        return idEvent;
+    }
 }

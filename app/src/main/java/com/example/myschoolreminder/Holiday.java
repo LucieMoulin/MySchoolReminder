@@ -7,11 +7,14 @@
 
 package com.example.myschoolreminder;
 
+import androidx.room.Entity;
+
 import java.util.Date;
 
 /**
  * Holiday
  */
+@Entity(tableName = "t_holiday")
 public class Holiday extends Event{
     /**
      * Constructor
@@ -22,8 +25,7 @@ public class Holiday extends Event{
     public Holiday(String name, Date startDate, Date endDate) {
         super(name, "");
 
-        Repetition repetition = new Repetition(RepetitionType.None, 0, true);
-        Schedule schedule = new Schedule(startDate, endDate, repetition);
-        addSchedule(schedule);
+        Schedule schedule = new Schedule(startDate, endDate, this);
+        Repetition repetition = new Repetition(schedule, RepetitionType.None, 0, true);
     }
 }

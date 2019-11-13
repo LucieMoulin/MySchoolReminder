@@ -7,45 +7,73 @@
 
 package com.example.myschoolreminder;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
 import java.util.Date;
+
+import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.NO_ACTION;
 
 /**
  * Repetition
  */
+@Entity(tableName = "t_repetition", foreignKeys = @ForeignKey(entity = Schedule.class, parentColumns = "idSchedule", childColumns = "fkSchedule", onDelete = CASCADE))
 public class Repetition {
+
+    /**
+     * id
+     */
+    @PrimaryKey(autoGenerate = true)
+    private int idRepetition;
 
     /**
      * Amount
      */
+    @ColumnInfo(name = "repAmount")
     private int amount;
-
-    /**
-     * Type (daily, weekly, etc)
-     */
-    private RepetitionType type;
 
     /**
      * Date when the repetition stops
      */
+    @ColumnInfo(name = "repUntil")
     private Date until;
 
     /**
      * Maximum of repetitions
      */
+    @ColumnInfo(name = "repMaximum")
     private int maximum;
 
     /**
      * Defines if the repetition is active during the holidays
      */
+    @ColumnInfo(name = "repIsActiveDuringHolidays")
     private Boolean isActiveDuringHolidays;
 
     /**
+     * Type (daily, weekly, etc)
+     */
+    @ColumnInfo(name = "repRepetitionType")
+    private RepetitionType type;
+
+    /**
+     * Schedule id
+     */
+    @ColumnInfo(name = "fkSchedule")
+    private int scheduleId;
+
+    /**
      * Constructor
+     * @param schedule
      * @param type type of repetition
      * @param amount amount of type (days, weeks, months)
      * @param isActiveDuringHolidays Defines if it's active during the holidays
      */
-    public Repetition(RepetitionType type, int amount, Boolean isActiveDuringHolidays){
+    public Repetition(Schedule schedule, RepetitionType type, int amount, Boolean isActiveDuringHolidays){
+        this.scheduleId = schedule.getIdSchedule();
         this.type = type;
         this.amount = amount;
         this.until = null;
@@ -55,12 +83,14 @@ public class Repetition {
 
     /**
      * Constructor (With end date)
+     * @param schedule
      * @param type type of repetition
      * @param amount amount of type (days, weeks, months)
      * @param until Date when the repetition stops
      * @param isActiveDuringHolidays Defines if it's active during the holidays
      */
-    public Repetition(RepetitionType type, int amount, Date until, Boolean isActiveDuringHolidays){
+    public Repetition(Schedule schedule, RepetitionType type, int amount, Date until, Boolean isActiveDuringHolidays){
+        this.scheduleId = schedule.getIdSchedule();
         this.type = type;
         this.amount = amount;
         this.until = until;
@@ -70,12 +100,14 @@ public class Repetition {
 
     /**
      * Constructor (With maximum of repetitions)
+     * @param schedule
      * @param type type of repetition
      * @param amount amount of type (days, weeks, months)
      * @param maximum Maximum of repetitions
      * @param isActiveDuringHolidays Defines if it's active during the holidays
      */
-    public Repetition(RepetitionType type, int amount, int maximum, Boolean isActiveDuringHolidays){
+    public Repetition(Schedule schedule, RepetitionType type, int amount, int maximum, Boolean isActiveDuringHolidays){
+        this.scheduleId = schedule.getIdSchedule();
         this.type = type;
         this.amount = amount;
         this.until = null;
@@ -161,5 +193,13 @@ public class Repetition {
      */
     public Boolean getActiveDuringHolidays() {
         return isActiveDuringHolidays;
+    }
+
+    /**
+     * Gets the schedule id
+     * @return
+     */
+    public int getScheduleId() {
+        return scheduleId;
     }
 }
