@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class Calendar {
     /**
-     * Events of the calendar
+     * Events of the reminder
      */
     private ArrayList<Event> events;
 
@@ -34,7 +34,7 @@ public class Calendar {
     }
 
     /**
-     * Adds an event to the calendar
+     * Adds an event to the reminder
      * @param event
      */
     public void addEvent(Event event){
@@ -42,7 +42,7 @@ public class Calendar {
     }
 
     /**
-     * Removes an event form the calendar
+     * Removes an event form the reminder
      * @param event
      */
     public void removeEvent(Event event){

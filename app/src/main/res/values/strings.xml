@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">MySchoolReminder</string>
-    <string name="title_activity_reminder">ReminderActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_main_activity">ReminderActivity</string>
+
+    <string name="bottom_navigation_menu_calendar">Calendrier</string>
+    <string name="bottom_navigation_menu_reminder">Rappels</string>
+    <string name="bottom_navigation_menu_countdown">Compte à rebours</string>
 </resources>
