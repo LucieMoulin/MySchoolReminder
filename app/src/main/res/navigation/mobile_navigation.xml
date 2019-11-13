@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.myschoolreminder.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:name="com.example.myschoolreminder.ui.calendar.CalendarFragment"
+        android:label="@string/bottom_navigation_menu_calendar"
+        tools:layout="@layout/fragment_calendar" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.myschoolreminder.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:name="com.example.myschoolreminder.ui.reminder.ReminderFragment"
+        android:label="@string/bottom_navigation_menu_reminder"
+        tools:layout="@layout/fragment_reminder" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.myschoolreminder.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:name="com.example.myschoolreminder.ui.countdown.CountdownFragment"
+        android:label="@string/bottom_navigation_menu_countdown"
+        tools:layout="@layout/fragment_countdown" />
 </navigation>

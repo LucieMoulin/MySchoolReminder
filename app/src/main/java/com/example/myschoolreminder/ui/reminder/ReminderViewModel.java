@@ -1,16 +1,16 @@
-package com.example.myschoolreminder.ui.dashboard;
+package com.example.myschoolreminder.ui.reminder;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
+public class ReminderViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public DashboardViewModel() {
+    public ReminderViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is reminder fragment");
     }
 
     public LiveData<String> getText() {
