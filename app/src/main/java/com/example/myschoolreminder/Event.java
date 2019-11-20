@@ -10,6 +10,8 @@ package com.example.myschoolreminder;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -17,7 +19,7 @@ import static androidx.room.ForeignKey.CASCADE;
 /**
  * Event
  */
- @Entity(tableName = "t_event")
+ @Entity(tableName = "t_event", indices = @Index(unique = true, value = "idEvent"))
 public class Event {
 
     /**
@@ -66,6 +68,7 @@ public class Event {
      * @param description
      * @param place place where the event takes place
      */
+    @Ignore
     public Event(String name, String description, String place){
         this.name = name;
         this.description = description;
@@ -126,5 +129,13 @@ public class Event {
      */
     public int getIdEvent() {
         return idEvent;
+    }
+
+    /**
+     * Sets the id
+     * @param idEvent
+     */
+    public void setIdEvent(int idEvent) {
+        this.idEvent = idEvent;
     }
 }

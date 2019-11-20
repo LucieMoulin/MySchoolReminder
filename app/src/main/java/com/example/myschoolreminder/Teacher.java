@@ -84,4 +84,12 @@ public class Teacher {
     public int getIdTeacher() {
         return idTeacher;
     }
+
+    /**
+     * Sets the id
+     * @param idTeacher
+     */
+    public void setIdTeacher(int idTeacher) {
+        this.idTeacher = idTeacher;
+    }
 }

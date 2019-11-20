@@ -10,13 +10,15 @@ package com.example.myschoolreminder;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 
 import static androidx.room.ForeignKey.SET_DEFAULT;
 
 /**
  * Class
  */
-@Entity(tableName = "t_class", foreignKeys = @ForeignKey(entity = Teacher.class, parentColumns = "idTeacher", childColumns = "fkTeacher", onDelete = SET_DEFAULT))
+@Entity(tableName = "t_class", foreignKeys = @ForeignKey(entity = Teacher.class, parentColumns = "idTeacher", childColumns = "fkTeacher", onDelete = SET_DEFAULT), indices = @Index(value = "fkTeacher"), inheritSuperIndices = true)
 public class Class extends Event{
     /**
      * Teacher
@@ -27,22 +29,23 @@ public class Class extends Event{
     /**
      * Constructor
      * @param name
-     * @param teacher
+     * @param teacherId
      */
-    public Class(String name, Teacher teacher){
+    public Class(String name, int teacherId){
         super(name, "");
-        this.teacherId = teacher.getIdTeacher();
+        this.teacherId = teacherId;
     }
 
     /**
      * Constructor (with place)
      * @param name
      * @param place
-     * @param teacher
+     * @param teacherId
      */
-    public Class(String name, String place, Teacher teacher) {
+    @Ignore
+    public Class(String name, String place, int teacherId) {
         super(name,"", place);
-        this.teacherId = teacher.getIdTeacher();
+        this.teacherId = teacherId;
     }
 
     /**
@@ -51,5 +54,13 @@ public class Class extends Event{
      */
     public void changeTeacher(Teacher newTeacher){
         teacherId = newTeacher.getIdTeacher();
+    }
+
+    /**
+     * Gets the teacher id
+     * @return
+     */
+    public int getTeacherId() {
+        return teacherId;
     }
 }

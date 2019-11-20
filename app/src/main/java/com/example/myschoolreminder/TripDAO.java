@@ -25,7 +25,7 @@ public interface TripDAO {
      * Gets all the trips
      * @return
      */
-    @Query("SELECT idEvent, eveName, eveDescription, evePlace, triCheckList FROM t_trip")
+    @Query("SELECT idEvent, eveName, eveDescription, evePlace FROM t_trip")
     List<Trip> getTrips();
 
     /**

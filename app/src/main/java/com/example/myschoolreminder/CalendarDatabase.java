@@ -12,10 +12,12 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import java.util.AbstractCollection;
 
-@Database(entities = {Event.class, Class.class, Holiday.class, Homework.class, Reminder.class, Repetition.class, Schedule.class, Teacher.class, Trip.class}, exportSchema = false, version = 1)
+@Database(entities = {Event.class, Class.class, Holiday.class, Homework.class, Reminder.class, Repetition.class, Schedule.class, Teacher.class, Trip.class, CheckListElement.class}, exportSchema = true, version = 1)
+@TypeConverters({Converters.class})
 public abstract class CalendarDatabase extends RoomDatabase {
 
     /**

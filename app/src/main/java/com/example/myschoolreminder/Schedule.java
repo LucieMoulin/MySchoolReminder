@@ -10,6 +10,7 @@ package com.example.myschoolreminder;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ import static androidx.room.ForeignKey.CASCADE;
 /**
  * Schedule
  */
-@Entity(tableName = "t_schedule", foreignKeys = @ForeignKey(entity = Event.class, parentColumns = "idEvent", childColumns = "fkEvent", onDelete = CASCADE))
+@Entity(tableName = "t_schedule", foreignKeys = @ForeignKey(entity = Event.class, parentColumns = "idEvent", childColumns = "fkEvent", onDelete = CASCADE), indices = {@Index(unique = true, value = "idSchedule"), @Index(value = "fkEvent")})
 public class Schedule {
 
     /**
@@ -50,12 +51,12 @@ public class Schedule {
      * Constructor
      * @param startDate Start date
      * @param endDate End date
-     * @param event
+     * @param eventId
      */
-    public Schedule(Date startDate, Date endDate, Event event){
+    public Schedule(Date startDate, Date endDate, int eventId){
         this.startDate = startDate;
         this.endDate = endDate;
-        this.eventId = event.getIdEvent();
+        this.eventId = eventId;
     }
 
     /**
@@ -96,6 +97,14 @@ public class Schedule {
      */
     public int getIdSchedule() {
         return idSchedule;
+    }
+
+    /**
+     * Sets the id
+     * @param idSchedule
+     */
+    public void setIdSchedule(int idSchedule) {
+        this.idSchedule = idSchedule;
     }
 
     /**

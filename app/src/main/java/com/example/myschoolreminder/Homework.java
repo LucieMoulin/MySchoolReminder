@@ -10,13 +10,14 @@ package com.example.myschoolreminder;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 
 import static androidx.room.ForeignKey.CASCADE;
 
 /**
  * HomeWork
  */
-@Entity(tableName = "t_homework", foreignKeys = @ForeignKey(entity = Class.class, parentColumns = "idClass", childColumns = "fkClass", onDelete = CASCADE))
+@Entity(tableName = "t_homework", foreignKeys = @ForeignKey(entity = Class.class, parentColumns = "idEvent", childColumns = "fkClass", onDelete = CASCADE), indices = @Index(value = "fkClass"), inheritSuperIndices = true)
 public class Homework extends Reminder{
     /**
      * Class for which this homework is
@@ -28,11 +29,11 @@ public class Homework extends Reminder{
      * Constructor
      * @param name
      * @param description
-     * @param container class for which the homework is
+     * @param classId id of the class for which the homework is
      */
-    public Homework(String name, String description, Class container) {
+    public Homework(String name, String description, int classId) {
         super(name, description);
-        this.classId = container.getIdEvent();
+        this.classId = classId;
     }
 
     /**

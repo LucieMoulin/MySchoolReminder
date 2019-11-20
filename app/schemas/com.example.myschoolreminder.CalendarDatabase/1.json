@@ -1,0 +1,611 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "7147b7456c89dba755838a150966ac02",
+    "entities": [
+      {
+        "tableName": "t_event",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idEvent` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eveName` TEXT, `eveDescription` TEXT, `evePlace` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "idEvent",
+            "columnName": "idEvent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "eveName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "eveDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "place",
+            "columnName": "evePlace",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idEvent"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_event_idEvent",
+            "unique": true,
+            "columnNames": [
+              "idEvent"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_event_idEvent` ON `${TABLE_NAME}` (`idEvent`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "t_class",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fkTeacher` INTEGER NOT NULL, `idEvent` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eveName` TEXT, `eveDescription` TEXT, `evePlace` TEXT, FOREIGN KEY(`fkTeacher`) REFERENCES `t_teacher`(`idTeacher`) ON UPDATE NO ACTION ON DELETE SET DEFAULT )",
+        "fields": [
+          {
+            "fieldPath": "teacherId",
+            "columnName": "fkTeacher",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idEvent",
+            "columnName": "idEvent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "eveName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "eveDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "place",
+            "columnName": "evePlace",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idEvent"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_class_fkTeacher",
+            "unique": false,
+            "columnNames": [
+              "fkTeacher"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_t_class_fkTeacher` ON `${TABLE_NAME}` (`fkTeacher`)"
+          },
+          {
+            "name": "index_t_class_idEvent",
+            "unique": true,
+            "columnNames": [
+              "idEvent"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_class_idEvent` ON `${TABLE_NAME}` (`idEvent`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "t_teacher",
+            "onDelete": "SET DEFAULT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "fkTeacher"
+            ],
+            "referencedColumns": [
+              "idTeacher"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "t_holiday",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idEvent` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eveName` TEXT, `eveDescription` TEXT, `evePlace` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "idEvent",
+            "columnName": "idEvent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "eveName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "eveDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "place",
+            "columnName": "evePlace",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idEvent"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_holiday_idEvent",
+            "unique": true,
+            "columnNames": [
+              "idEvent"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_holiday_idEvent` ON `${TABLE_NAME}` (`idEvent`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "t_homework",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fkClass` INTEGER NOT NULL, `remIsDone` INTEGER, `idEvent` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eveName` TEXT, `eveDescription` TEXT, `evePlace` TEXT, FOREIGN KEY(`fkClass`) REFERENCES `t_class`(`idEvent`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "classId",
+            "columnName": "fkClass",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDone",
+            "columnName": "remIsDone",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idEvent",
+            "columnName": "idEvent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "eveName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "eveDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "place",
+            "columnName": "evePlace",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idEvent"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_homework_fkClass",
+            "unique": false,
+            "columnNames": [
+              "fkClass"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_t_homework_fkClass` ON `${TABLE_NAME}` (`fkClass`)"
+          },
+          {
+            "name": "index_t_homework_idEvent",
+            "unique": true,
+            "columnNames": [
+              "idEvent"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_homework_idEvent` ON `${TABLE_NAME}` (`idEvent`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "t_class",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "fkClass"
+            ],
+            "referencedColumns": [
+              "idEvent"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "t_reminder",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`remIsDone` INTEGER, `idEvent` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eveName` TEXT, `eveDescription` TEXT, `evePlace` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "isDone",
+            "columnName": "remIsDone",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idEvent",
+            "columnName": "idEvent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "eveName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "eveDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "place",
+            "columnName": "evePlace",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idEvent"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_reminder_idEvent",
+            "unique": true,
+            "columnNames": [
+              "idEvent"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_reminder_idEvent` ON `${TABLE_NAME}` (`idEvent`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "t_repetition",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idRepetition` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `repAmount` INTEGER NOT NULL, `repUntil` INTEGER, `repMaximum` INTEGER NOT NULL, `repIsActiveDuringHolidays` INTEGER, `repRepetitionType` TEXT, `fkSchedule` INTEGER NOT NULL, FOREIGN KEY(`fkSchedule`) REFERENCES `t_schedule`(`idSchedule`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idRepetition",
+            "columnName": "idRepetition",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "repAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "until",
+            "columnName": "repUntil",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "maximum",
+            "columnName": "repMaximum",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActiveDuringHolidays",
+            "columnName": "repIsActiveDuringHolidays",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "repRepetitionType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "scheduleId",
+            "columnName": "fkSchedule",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idRepetition"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_repetition_idRepetition",
+            "unique": true,
+            "columnNames": [
+              "idRepetition"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_repetition_idRepetition` ON `${TABLE_NAME}` (`idRepetition`)"
+          },
+          {
+            "name": "index_t_repetition_fkSchedule",
+            "unique": false,
+            "columnNames": [
+              "fkSchedule"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_t_repetition_fkSchedule` ON `${TABLE_NAME}` (`fkSchedule`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "t_schedule",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "fkSchedule"
+            ],
+            "referencedColumns": [
+              "idSchedule"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "t_schedule",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idSchedule` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `schStartDate` INTEGER, `schEndDate` INTEGER, `fkEvent` INTEGER NOT NULL, FOREIGN KEY(`fkEvent`) REFERENCES `t_event`(`idEvent`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idSchedule",
+            "columnName": "idSchedule",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "schStartDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "schEndDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eventId",
+            "columnName": "fkEvent",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idSchedule"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_schedule_idSchedule",
+            "unique": true,
+            "columnNames": [
+              "idSchedule"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_schedule_idSchedule` ON `${TABLE_NAME}` (`idSchedule`)"
+          },
+          {
+            "name": "index_t_schedule_fkEvent",
+            "unique": false,
+            "columnNames": [
+              "fkEvent"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_t_schedule_fkEvent` ON `${TABLE_NAME}` (`fkEvent`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "t_event",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "fkEvent"
+            ],
+            "referencedColumns": [
+              "idEvent"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "t_teacher",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idTeacher` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `teaLastName` TEXT, `teaFirstName` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "idTeacher",
+            "columnName": "idTeacher",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastName",
+            "columnName": "teaLastName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "firstName",
+            "columnName": "teaFirstName",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idTeacher"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "t_trip",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idEvent` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eveName` TEXT, `eveDescription` TEXT, `evePlace` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "idEvent",
+            "columnName": "idEvent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "eveName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "eveDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "place",
+            "columnName": "evePlace",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idEvent"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_trip_idEvent",
+            "unique": true,
+            "columnNames": [
+              "idEvent"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_trip_idEvent` ON `${TABLE_NAME}` (`idEvent`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "t_checkListElement",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idCheckListElement` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cheIsChecked` INTEGER, `cheDescription` TEXT, `fkTrip` INTEGER NOT NULL, FOREIGN KEY(`fkTrip`) REFERENCES `t_trip`(`idEvent`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idCheckListElement",
+            "columnName": "idCheckListElement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isChecked",
+            "columnName": "cheIsChecked",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "cheDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tripId",
+            "columnName": "fkTrip",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idCheckListElement"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_t_checkListElement_idCheckListElement",
+            "unique": true,
+            "columnNames": [
+              "idCheckListElement"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_t_checkListElement_idCheckListElement` ON `${TABLE_NAME}` (`idCheckListElement`)"
+          },
+          {
+            "name": "index_t_checkListElement_fkTrip",
+            "unique": false,
+            "columnNames": [
+              "fkTrip"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_t_checkListElement_fkTrip` ON `${TABLE_NAME}` (`fkTrip`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "t_trip",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "fkTrip"
+            ],
+            "referencedColumns": [
+              "idEvent"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7147b7456c89dba755838a150966ac02')"
+    ]
+  }
+}

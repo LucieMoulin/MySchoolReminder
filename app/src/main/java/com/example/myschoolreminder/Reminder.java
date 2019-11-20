@@ -13,7 +13,7 @@ import androidx.room.Entity;
 /**
  * Reminder
  */
-@Entity(tableName = "t_reminder")
+@Entity(tableName = "t_reminder", inheritSuperIndices = true)
 public class Reminder extends Event {
 
     /**
@@ -40,16 +40,10 @@ public class Reminder extends Event {
     }
 
     /**
-     * Sets the reminder as done
+     * Sets the state of the reminder
+     * @param isDone
      */
-    public void setDone() {
-        this.isDone = true;
-    }
-
-    /**
-     * Sets the reminder as not done
-     */
-    public void setNotDone() {
-        this.isDone = false;
+    public void setIsDone(Boolean isDone){
+        this.isDone = isDone;
     }
 }

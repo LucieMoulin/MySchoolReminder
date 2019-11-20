@@ -21,12 +21,6 @@ public enum RepetitionType{
     Yearly("Annuel", "années");
 
     /**
-     * id
-     */
-    @PrimaryKey(autoGenerate = true)
-    private int idRepetitionType;
-
-    /**
      * Name
      */
     private String name;

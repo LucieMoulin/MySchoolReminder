@@ -11,6 +11,7 @@ import android.provider.CalendarContract;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,16 +21,21 @@ import java.util.Map;
 /**
  * Trip
  */
-@Entity(tableName = "t_trip")
+@Entity(tableName = "t_trip", inheritSuperIndices = true)
 public class Trip extends Event{
-    /**
-     * Checklist
-     */
-    @ColumnInfo(name = "triCheckList")
-    private Map<String, Boolean> checklist;
 
     /**
      * Constructor
+     * @param name
+     * @param description
+     * @param place
+     */
+    public Trip(String name, String description, String place){
+        super(name, description, place);
+    }
+
+    /**
+     * Constructor (with schedule and checklist)
      * @param name
      * @param description
      * @param place
@@ -37,17 +43,17 @@ public class Trip extends Event{
      * @param endDate
      * @param checklist
      */
+    @Ignore
     public Trip(String name, String description, String place, Date startDate, Date endDate, ArrayList<String> checklist) {
         super(name, description, place);
 
         //Creation of the schedule
-        Schedule schedule = new Schedule(startDate, endDate, this);
-        Repetition repetition = new Repetition(schedule, RepetitionType.None, 0, true);
+        Schedule schedule = new Schedule(startDate, endDate, getIdEvent());
+        Repetition repetition = new Repetition(schedule.getIdSchedule(), RepetitionType.None, 0, true);
 
         //Creation of the checklist
-        this.checklist = new HashMap<>();
         for (String string : checklist) {
-            this.checklist.put(string, false);
+            new CheckListElement(false, string, getIdEvent());
         }
     }
 }
