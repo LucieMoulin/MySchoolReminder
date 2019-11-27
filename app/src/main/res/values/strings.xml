@@ -28,11 +28,11 @@
     <string name="btn_add">+</string>
 
     <string name="eventTypeTitle">Ajout d\'un élément</string>
-    <string name="addTrip">Voyage</string>
-    <string name="addHolidays">Vacances</string>
-    <string name="addClass">Cours</string>
-    <string name="addHomework">Devoir</string>
-    <string name="addReminder">Rappel</string>
-    <string name="addEvent">Événement</string>
+    <string name="trip">Voyage</string>
+    <string name="holidays">Vacances</string>
+    <string name="Class">Cours</string>
+    <string name="homework">Devoir</string>
+    <string name="reminder">Rappel</string>
+    <string name="event">Événement</string>
 
 </resources>
