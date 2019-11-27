@@ -5,4 +5,24 @@
     <string name="bottom_navigation_menu_calendar">Calendrier</string>
     <string name="bottom_navigation_menu_reminder">Rappels</string>
     <string name="bottom_navigation_menu_countdown">Compte à rebours</string>
+    <string name="addEvent">Ajouter un événement</string>
+    <string name="title">Titre</string>
+    <string name="place">Lieu</string>
+    <string name="description">Description</string>
+    <string name="schedule">Horaire</string>
+    <string name="startDate">Date de début</string>
+    <string name="endDate">Date de fin</string>
+    <string name="startTime">Heure de début</string>
+    <string name="endTime">Heure de fin</string>
+    <string name="repetition">Répétition</string>
+    <string name="addSchedule">Ajouter un horaire</string>
+    <string name="frequency">Fréquence</string>
+    <string name="none">Aucune</string>
+    <string name="amountOfRepetitions">Nombre de répétitions</string>
+    <string name="limitDate">Date limite</string>
+    <string name="limite">Limite</string>
+    <string name="repeatDuringHolidays">Répéter durant les vacances</string>
+
+    <string-array name="repetitionTypes">
+    </string-array>
 </resources>
