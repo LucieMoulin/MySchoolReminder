@@ -54,7 +54,7 @@ public class EventScheduleFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
         //Gets the repetition types
         RepetitionType[] rawTypes = RepetitionType.values();
-        CharSequence[] types = new CharSequence[RepetitionType.values().length];
+        String[] types = new String[RepetitionType.values().length];
 
         for(int i = 0; i < RepetitionType.values().length; i++){
             types[i] = rawTypes[i].getName();
@@ -64,12 +64,10 @@ public class EventScheduleFragment extends Fragment {
         Spinner spinner = view.findViewById(R.id.spinnerRepetitionType);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.repetitionTypes, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, types);
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        adapter.addAll(types);
 
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);

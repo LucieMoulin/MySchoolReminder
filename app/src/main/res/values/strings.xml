@@ -22,11 +22,7 @@
     <string name="limitDate">Date limite</string>
     <string name="limite">Limite</string>
     <string name="repeatDuringHolidays">Répéter durant les vacances</string>
-
-    <string-array name="repetitionTypes">
-    </string-array>
     <string name="btn_add">+</string>
-
     <string name="eventTypeTitle">Ajout d\'un élément</string>
     <string name="trip">Voyage</string>
     <string name="holidays">Vacances</string>
