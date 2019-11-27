@@ -5,4 +5,14 @@
     <string name="bottom_navigation_menu_calendar">Calendrier</string>
     <string name="bottom_navigation_menu_reminder">Rappels</string>
     <string name="bottom_navigation_menu_countdown">Compte à rebours</string>
+    <string name="btn_add">+</string>
+
+    <string name="eventTypeTitle">Ajout d\'un élément</string>
+    <string name="addTrip">Voyage</string>
+    <string name="addHolidays">Vacances</string>
+    <string name="addClass">Cours</string>
+    <string name="addHomework">Devoir</string>
+    <string name="addReminder">Rappel</string>
+    <string name="addEvent">Événement</string>
+
 </resources>
