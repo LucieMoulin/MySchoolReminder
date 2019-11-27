@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".EventTypeMenuActivity"></activity>
+        <activity android:name=".EventActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_main_activity">
