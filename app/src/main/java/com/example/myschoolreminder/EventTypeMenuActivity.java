@@ -8,6 +8,7 @@ package com.example.myschoolreminder;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.myschoolreminder.Objects.EventType;
+
+import java.util.ArrayList;
 
 public class EventTypeMenuActivity extends AppCompatActivity {
 
@@ -25,32 +28,47 @@ public class EventTypeMenuActivity extends AppCompatActivity {
 
         //Gets the repetition types
         final EventType[] rawTypes = EventType.values();
+        ArrayList<Button> buttons = new ArrayList<Button>();
 
         //Layout
         ConstraintLayout layout = findViewById(R.id.eventTypeMenuLayout);
 
-        for (int i = 0; i < EventType.values().length; i++) {
+        //Creates all the buttons
+        for (final EventType type : EventType.values()) {
             Button btnAddElement = new Button(getApplicationContext());
-            btnAddElement.setText(rawTypes[i].getName());
-            //TODO ajouter les paramètres de layout
-
-            final int finalI = i;
+            btnAddElement.setText(type.getName());
+            btnAddElement.setId(View.generateViewId());
 
             btnAddElement.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(EventTypeMenuActivity.this, EventActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("eventType", rawTypes[finalI].getName());
+                    bundle.putString("eventType", type.getName());
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
 
-
+            buttons.add(btnAddElement);
             layout.addView(btnAddElement);
         }
 
+        //gets all the ids
+        int[] ids = new int[buttons.size()];
+        for (int i = 0; i < buttons.size(); i++) {
+            ids[i] = buttons.get(i).getId();
+        }
 
+        ConstraintSet set = new ConstraintSet();
+        set.clone(layout);
+
+        set.createVerticalChain(R.id.txtEventTypeTitle, ConstraintSet.BOTTOM, layout.getId(), ConstraintSet.BOTTOM, ids, null, ConstraintSet.CHAIN_SPREAD);
+
+        for (Button button : buttons) {
+            set.centerHorizontally(button.getId(), layout.getId());
+        }
+
+        set.applyTo(layout);
     }
 }
