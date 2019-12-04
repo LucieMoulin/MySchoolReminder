@@ -15,10 +15,10 @@ import androidx.room.PrimaryKey;
  */
 public enum RepetitionType{
     None("Aucune",""),
-    Daily("Journalier","jours"),
+    Daily("Journalière","jours"),
     Weekly("Hebdomadaire", "semaines"),
-    Monthly("Mensuel", "mois"),
-    Yearly("Annuel", "années");
+    Monthly("Mensuelle", "mois"),
+    Yearly("Annuelle", "années");
 
     /**
      * Name

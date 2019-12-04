@@ -13,6 +13,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 
+import java.lang.reflect.Type;
+
 import static androidx.room.ForeignKey.SET_DEFAULT;
 
 /**

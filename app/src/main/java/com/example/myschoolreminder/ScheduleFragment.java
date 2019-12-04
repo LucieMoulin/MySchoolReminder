@@ -1,7 +1,6 @@
 package com.example.myschoolreminder;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -11,27 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
-import com.example.myschoolreminder.Objects.Repetition;
 import com.example.myschoolreminder.Objects.RepetitionType;
 
-import java.util.ArrayList;
-
-
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EventScheduleFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link EventScheduleFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Schedule fragment
  */
-public class EventScheduleFragment extends Fragment {
+public class ScheduleFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
-    public EventScheduleFragment() {
-        // Required empty public constructor
+    /**
+     * Required empty public constructor
+     */
+    public ScheduleFragment() {
+
     }
 
     /**
@@ -40,11 +34,14 @@ public class EventScheduleFragment extends Fragment {
      *
      * @return A new instance of fragment EventScheduleFragment.
      */
-    public static EventScheduleFragment newInstance() {
-        EventScheduleFragment fragment = new EventScheduleFragment();
-        return fragment;
+    public static ScheduleFragment newInstance() {
+        return new ScheduleFragment();
     }
 
+    /**
+     * On the creation of the fragment
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +68,18 @@ public class EventScheduleFragment extends Fragment {
 
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+
+        //Gets the remove button
+        Button removeButton = view.findViewById(R.id.removeButton);
+        final ScheduleFragment fragment = this;
+
+        //Sets the onClickListener
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((EventActivity) getActivity()).RemoveScheduleFragment(fragment);
+            }
+        });
     }
 
     @Override

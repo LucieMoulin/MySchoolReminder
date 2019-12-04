@@ -31,5 +31,6 @@
     <string name="reminder">Rappel</string>
     <string name="event">Événement</string>
     <string name="add">Ajouter</string>
+    <string name="btn_remove">-</string>
 
 </resources>

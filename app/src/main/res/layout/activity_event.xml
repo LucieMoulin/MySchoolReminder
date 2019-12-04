@@ -7,7 +7,7 @@
     android:layout_height="fill_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".EventActivity">
 
         <TextView
@@ -64,15 +64,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextPlace" />
 
-        <fragment
-            android:id="@+id/fragmentSchedule1"
-            android:name="com.example.myschoolreminder.EventScheduleFragment"
-            android:layout_width="375dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+        <LinearLayout
+            android:id="@+id/fragmentFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextDescription"
+            android:orientation="vertical" />
 
         <Button
             android:id="@+id/buttonAddSchedule"
@@ -82,7 +84,7 @@
             android:text="@string/addSchedule"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragmentSchedule1" />
+            app:layout_constraintTop_toBottomOf="@+id/fragmentFrame" />
 
         <Button
             android:id="@+id/button"
