@@ -1,3 +1,9 @@
+/**
+ * ETML
+ * Authors : Lucie Moulin and Léa Cherpillod
+ * Date : 06.11.2019
+ * Description : Menu to choose an event type to add
+ */
 package com.example.myschoolreminder;
 
 import androidx.appcompat.app.AppCompatActivity;
