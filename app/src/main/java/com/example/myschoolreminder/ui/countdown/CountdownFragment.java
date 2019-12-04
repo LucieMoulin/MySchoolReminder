@@ -23,7 +23,7 @@ public class CountdownFragment extends Fragment {
         countdownViewModel =
                 ViewModelProviders.of(this).get(CountdownViewModel.class);
         View root = inflater.inflate(R.layout.fragment_countdown, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
+        final TextView textView = root.findViewById(R.id.text_countdown);
         countdownViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {

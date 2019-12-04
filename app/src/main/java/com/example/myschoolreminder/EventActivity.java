@@ -1,3 +1,9 @@
+/**
+ * ETML
+ * Authors : Lucie Moulin and Léa Cherpillod
+ * Date : 27.11.2019
+ * Description : Event activity
+ */
 package com.example.myschoolreminder;
 
 import androidx.appcompat.app.AppCompatActivity;

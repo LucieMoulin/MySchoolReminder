@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_calendar"
         android:icon="@drawable/ic_calendar"
         android:title="@string/bottom_navigation_menu_calendar" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_reminder"
         android:icon="@drawable/ic_reminder"
         android:title="@string/bottom_navigation_menu_reminder" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_countdown"
         android:icon="@drawable/ic_countdown"
         android:title="@string/bottom_navigation_menu_countdown" />
 

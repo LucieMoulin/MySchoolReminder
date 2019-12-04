@@ -15,7 +15,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.myschoolreminder.EventTypeMenuActivity;
-import com.example.myschoolreminder.MainActivity;
 import com.example.myschoolreminder.R;
 
 public class CalendarFragment extends Fragment {
@@ -27,7 +26,7 @@ public class CalendarFragment extends Fragment {
         calendarViewModel =
                 ViewModelProviders.of(this).get(CalendarViewModel.class);
         View root = inflater.inflate(R.layout.fragment_calendar, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
+        final TextView textView = root.findViewById(R.id.text_calendar);
         calendarViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {

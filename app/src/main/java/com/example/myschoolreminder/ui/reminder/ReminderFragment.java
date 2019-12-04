@@ -23,7 +23,7 @@ public class ReminderFragment extends Fragment {
         reminderViewModel =
                 ViewModelProviders.of(this).get(ReminderViewModel.class);
         View root = inflater.inflate(R.layout.fragment_reminder, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
+        final TextView textView = root.findViewById(R.id.text_reminder);
         reminderViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
