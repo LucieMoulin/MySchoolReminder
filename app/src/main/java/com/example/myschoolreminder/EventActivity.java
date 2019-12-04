@@ -13,6 +13,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myschoolreminder.Objects.EventType;
 import com.example.myschoolreminder.Objects.Schedule;
 
 import java.util.ArrayList;
@@ -46,6 +47,14 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                 AddScheduleFragment();
             }
         });
+
+        //Switches the event type
+        Bundle bundle = getIntent().getExtras();
+        String value = EventType.EVENT.getName();
+        if(bundle != null)
+        {
+            value = bundle.getString("eventType");
+        }
     }
 
     @Override
