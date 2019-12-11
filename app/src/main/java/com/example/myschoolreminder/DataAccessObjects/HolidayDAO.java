@@ -35,7 +35,7 @@ public interface HolidayDAO {
      * @param holiday
      */
     @Insert
-    void insertHoliday(Holiday holiday);
+    long insertHoliday(Holiday holiday);
 
     /**
      * Updates a holiday

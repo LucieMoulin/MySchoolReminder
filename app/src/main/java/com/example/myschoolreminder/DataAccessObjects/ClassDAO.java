@@ -35,7 +35,7 @@ public interface ClassDAO {
      * @param classToInsert
      */
     @Insert
-    void insertClass(Class classToInsert);
+    long insertClass(Class classToInsert);
 
     /**
      * Updates a class

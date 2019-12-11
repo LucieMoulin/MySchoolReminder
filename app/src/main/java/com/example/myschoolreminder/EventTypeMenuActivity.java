@@ -43,9 +43,7 @@ public class EventTypeMenuActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(EventTypeMenuActivity.this, EventActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("eventType", type.getName());
-                    intent.putExtras(bundle);
+                    intent.putExtra("eventType", type.ordinal());
                     startActivity(intent);
                 }
             });

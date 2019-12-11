@@ -35,7 +35,7 @@ public interface ReminderDAO {
      * @param reminder
      */
     @Insert
-    void insertReminder(Reminder reminder);
+    long insertReminder(Reminder reminder);
 
     /**
      * Updates a reminder

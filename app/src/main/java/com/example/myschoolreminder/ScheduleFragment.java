@@ -1,3 +1,10 @@
+/**
+ * ETML
+ * Authors : Lucie Moulin and Léa Cherpillod
+ * Date : 27.11.2019
+ * Description : Schedule Fragment
+ */
+
 package com.example.myschoolreminder;
 
 import android.content.Context;
@@ -14,6 +21,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.myschoolreminder.Objects.RepetitionType;
+import com.example.myschoolreminder.Objects.Schedule;
 
 /**
  * Schedule fragment
@@ -118,5 +126,14 @@ public class ScheduleFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction();
+    }
+
+    /**
+     * Builds a schedule object with the data entered
+     * @return
+     */
+    public Schedule getSchedule(){
+        //TODO return schedule with data entered
+        return new Schedule();
     }
 }

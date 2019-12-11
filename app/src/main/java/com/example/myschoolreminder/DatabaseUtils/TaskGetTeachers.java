@@ -1,8 +1,8 @@
 /**
  * ETML
  * Authors : Lucie Moulin and Léa Cherpillod
- * Date : 13.11.2019
- * Description : Task getting events
+ * Date : 11.12.2019
+ * Description : Task getting teachers
  */
 
 package com.example.myschoolreminder.DatabaseUtils;
@@ -11,16 +11,18 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.myschoolreminder.Objects.Event;
+import com.example.myschoolreminder.Objects.Teacher;
 import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetEventsAsyncReturn;
+import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetTeachersAsyncReturn;
 
 import java.util.List;
 
 /**
- * Task getting events
+ * Task getting teachers
  */
-public class TaskGetEvents extends AsyncTask<Context, Void, List<Event>> {
+public class TaskGetTeachers extends AsyncTask<Context, Void, List<Teacher>> {
 
-    public GetEventsAsyncReturn delegate;
+    public GetTeachersAsyncReturn delegate;
 
     /**
      * Gets the events asynchronously
@@ -28,10 +30,10 @@ public class TaskGetEvents extends AsyncTask<Context, Void, List<Event>> {
      * @return
      */
     @Override
-    protected List<Event> doInBackground(Context... contexts) {
+    protected List<Teacher> doInBackground(Context... contexts) {
         CalendarDatabase database = CalendarDatabase.getInstance(contexts[0]);
 
-        return database.eventDAO().getEvents();
+        return database.teacherDAO().getTeachers();
     }
 
     /**
@@ -39,7 +41,7 @@ public class TaskGetEvents extends AsyncTask<Context, Void, List<Event>> {
      * @param output
      */
     @Override
-    protected void onPostExecute(List<Event> output) {
-        delegate.returnEvents(output);
+    protected void onPostExecute(List<Teacher> output) {
+        delegate.returnTeachers(output);
     }
 }

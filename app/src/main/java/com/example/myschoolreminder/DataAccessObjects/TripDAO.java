@@ -35,7 +35,7 @@ public interface TripDAO {
      * @param trip
      */
     @Insert
-    void insertTrip(Trip trip);
+    long insertTrip(Trip trip);
 
     /**
      * Updates a trip

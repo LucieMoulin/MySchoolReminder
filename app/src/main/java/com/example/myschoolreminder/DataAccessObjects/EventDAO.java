@@ -35,7 +35,7 @@ public interface EventDAO {
      * @param event
      */
     @Insert
-    void insertEvent(Event event);
+    long insertEvent(Event event);
 
     /**
      * Updates an event

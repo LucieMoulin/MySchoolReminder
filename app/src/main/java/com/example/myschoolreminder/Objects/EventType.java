@@ -13,7 +13,7 @@ public enum EventType {
     TRIP("Voyage", Trip.class),
     HOLIDAY("Vacances", Holiday.class),
     CLASS("Cours", Class.class),
-    HOMEWORK("Devoir", Homework.class),
+    HOMEWORK("Devoirs", Homework.class),
     REMINDER("Rappel", Reminder.class),
     EVENT("Événement", Event.class);
 

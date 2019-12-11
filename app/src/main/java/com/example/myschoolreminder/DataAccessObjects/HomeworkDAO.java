@@ -35,7 +35,7 @@ public interface HomeworkDAO {
      * @param homework
      */
     @Insert
-    void insertHomework(Homework homework);
+    long insertHomework(Homework homework);
 
     /**
      * Updates homework

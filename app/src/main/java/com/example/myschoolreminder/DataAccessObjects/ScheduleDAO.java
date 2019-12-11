@@ -35,7 +35,7 @@ public interface ScheduleDAO {
      * @param schedule
      */
     @Insert
-    void insertSchedule(Schedule schedule);
+    long insertSchedule(Schedule schedule);
 
     /**
      * Updates a schedule

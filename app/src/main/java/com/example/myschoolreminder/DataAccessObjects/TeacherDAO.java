@@ -35,7 +35,7 @@ public interface TeacherDAO {
      * @param teacher
      */
     @Insert
-    void insertTeacher(Teacher teacher);
+    long insertTeacher(Teacher teacher);
 
     /**
      * Updates a teacher

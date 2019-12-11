@@ -35,7 +35,7 @@ public interface RepetitionDAO {
      * @param repetition
      */
     @Insert
-    void insertRepetition(Repetition repetition);
+    long insertRepetition(Repetition repetition);
 
     /**
      * Updates a repetition
