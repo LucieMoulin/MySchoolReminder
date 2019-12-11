@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -16,6 +17,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.myschoolreminder.EventTypeMenuActivity;
 import com.example.myschoolreminder.R;
+
+import java.util.Locale;
 
 public class CalendarFragment extends Fragment {
 
@@ -38,14 +41,25 @@ public class CalendarFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState){
 
-        Button btnAddElement = getView().findViewById(R.id.btnAddElement);
+        Button btnAddElement = view.findViewById(R.id.btnAddElement);
 
         btnAddElement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getContext(), EventTypeMenuActivity.class));
+            }
+        });
+
+        CalendarView calendar = view.findViewById(R.id.calendarView);
+
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
+                TextView txtview = view.findViewById(R.id.txtcal);
+
+                txtview.setText(dayOfMonth + "." + month + "." + year);
             }
         });
     }

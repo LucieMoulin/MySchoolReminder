@@ -14,6 +14,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.myschoolreminder.R;
 
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+
+import java.util.Date;
+
 public class CountdownFragment extends Fragment {
 
     private CountdownViewModel countdownViewModel;
@@ -30,6 +35,20 @@ public class CountdownFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+
         return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+
+        DateTime start = DateTime.now();
+        DateTime end = new DateTime(2022, 3, 24, 18, 0, 0);
+
+        Period period = new Period(start, end);
+
+        TextView countdown = view.findViewById(R.id.txvCountdown);
+        countdown.setText(period.getYears() + " années " + period.getMonths() + " mois " + period.getWeeks() + " semaines " + period.getDays() + " jours");
     }
 }
