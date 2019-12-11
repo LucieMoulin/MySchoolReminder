@@ -20,11 +20,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myschoolreminder.DatabaseUtils.TaskAddEvent;
+import com.example.myschoolreminder.DatabaseUtils.TaskAddRepetition;
+import com.example.myschoolreminder.DatabaseUtils.TaskAddSchedule;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetTeachers;
 import com.example.myschoolreminder.Objects.Class;
 import com.example.myschoolreminder.Objects.Event;
 import com.example.myschoolreminder.Objects.EventType;
 import com.example.myschoolreminder.Objects.Reminder;
+import com.example.myschoolreminder.Objects.Repetition;
 import com.example.myschoolreminder.Objects.Schedule;
 import com.example.myschoolreminder.Objects.Teacher;
 import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetTeachersAsyncReturn;
@@ -91,13 +94,29 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                     e.printStackTrace();
                 }
 
-                //Todo Gets the schedule
+                //Gets the schedule of each fragment, and saves it with
+                for (ScheduleFragment fragment : fragments) {
+                    Schedule schedule = fragment.getSchedule(((int) id));
 
-                //Todo Saves the schedule
+                    TaskAddSchedule taskAddSchedule = new TaskAddSchedule();
+                    taskAddSchedule.execute(new Pair<Context, Schedule>(getApplicationContext(), schedule));
 
-                //Todo Get repetition
+                    long scheduleID = 0;
+                    try {
+                        scheduleID = taskAddSchedule.get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                //Todo Save repetition
+                    //Gets the repetition
+                    Repetition repetition = fragment.getRepetition((int) scheduleID);
+
+                    //Saves the repetition
+                    TaskAddRepetition taskAddRepetition = new TaskAddRepetition();
+                    taskAddRepetition.execute(new Pair<Context, Repetition>(getApplicationContext(), repetition));
+                }
             }
         });
 

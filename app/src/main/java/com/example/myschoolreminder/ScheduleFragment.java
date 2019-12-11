@@ -18,10 +18,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import com.example.myschoolreminder.Objects.Repetition;
 import com.example.myschoolreminder.Objects.RepetitionType;
 import com.example.myschoolreminder.Objects.Schedule;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Schedule fragment
@@ -132,8 +140,53 @@ public class ScheduleFragment extends Fragment {
      * Builds a schedule object with the data entered
      * @return
      */
-    public Schedule getSchedule(){
-        //TODO return schedule with data entered
-        return new Schedule();
+    public Schedule getSchedule(int eventID){
+        //Gets the values entered
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        //Gets the dates strings and tries to convert it
+        String startDateString = ((EditText)this.getView().findViewById(R.id.editTextStartDate)).getText().toString();
+        String startTimeString = ((EditText)this.getView().findViewById(R.id.editTextStartTime)).getText().toString();
+        String endDateString = ((EditText)this.getView().findViewById(R.id.editTextEndDate)).getText().toString();
+        String endTimeString = ((EditText)this.getView().findViewById(R.id.editTextEndTime)).getText().toString();
+        Date startDate = new Date();
+        Date endDate = new Date();;
+        try {
+            startDate = df.parse(startDateString + " " + startTimeString);
+            endDate = df.parse(endDateString + " " + endTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Builds the event
+        Schedule schedule = new Schedule(startDate, endDate, eventID);
+
+        return schedule;
+    }
+
+    /**
+     * Builds a repetition object with the data inserted
+     * @param scheduleId
+     * @return
+     */
+    public Repetition getRepetition(int scheduleId){
+        //Gets the repetition type, frequency, and activity during holidays
+        RepetitionType type = RepetitionType.values()[((Spinner)getView().findViewById(R.id.spinnerRepetitionType)).getSelectedItemPosition()];
+        int amount = Integer.parseInt(((EditText)getView().findViewById(R.id.editTextFrequency)).getText().toString());
+        Boolean isActiveDuringHolidays = ((CheckBox)getView().findViewById(R.id.checkBoxDuringHolidays)).isChecked();
+
+        //Depending of the type of limit selected, create the Repetition
+        RadioGroup group = getView().findViewById(R.id.radioGroupLimitType);
+        switch (group.getCheckedRadioButtonId()){
+            default:
+            case R.id.radioButtonNone:
+                return new Repetition(scheduleId, type, amount, isActiveDuringHolidays);
+            case R.id.radioButtonLimitDate:
+                Date until = new Date();//Todo récupérer la date entrée
+                return new Repetition(scheduleId, type, amount, until, isActiveDuringHolidays);
+            case R.id.radioButtonLimitAmount:
+                int maximumOfRepetitions = 0;//Todo récupérer le maimum entré
+                return new Repetition(scheduleId, type, amount, maximumOfRepetitions, isActiveDuringHolidays);
+        }
     }
 }
