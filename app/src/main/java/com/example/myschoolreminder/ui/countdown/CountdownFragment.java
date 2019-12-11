@@ -49,6 +49,6 @@ public class CountdownFragment extends Fragment {
         Period period = new Period(start, end);
 
         TextView countdown = view.findViewById(R.id.txvCountdown);
-        countdown.setText(period.getYears() + " années " + period.getMonths() + " mois " + period.getWeeks() + " semaines" + period.getDays() + " jours");
+        countdown.setText(period.getYears() + " années " + period.getMonths() + " mois " + period.getWeeks() + " semaines " + period.getDays() + " jours");
     }
 }
