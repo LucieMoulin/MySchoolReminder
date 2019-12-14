@@ -85,18 +85,18 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                 taskAddEvent.execute(new Pair<Context, Event>(getApplicationContext(), event));
 
                 //Tries to get the id of the event
-                long id = 0;
+                long eventId = 0;
                 try {
-                    id = taskAddEvent.get();
+                    eventId = taskAddEvent.get();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                //Gets the schedule of each fragment, and saves it with
+                //Gets the schedule of each fragment, and saves it
                 for (ScheduleFragment fragment : fragments) {
-                    Schedule schedule = fragment.getSchedule(((int) id));
+                    Schedule schedule = fragment.getSchedule(((int) eventId));
 
                     TaskAddSchedule taskAddSchedule = new TaskAddSchedule();
                     taskAddSchedule.execute(new Pair<Context, Schedule>(getApplicationContext(), schedule));
@@ -110,13 +110,15 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                         e.printStackTrace();
                     }
 
-                    //Gets the repetition
+                    //Gets the repetition of the schedule
                     Repetition repetition = fragment.getRepetition((int) scheduleID);
 
                     //Saves the repetition
                     TaskAddRepetition taskAddRepetition = new TaskAddRepetition();
                     taskAddRepetition.execute(new Pair<Context, Repetition>(getApplicationContext(), repetition));
                 }
+
+                finish();
             }
         });
 
@@ -174,7 +176,7 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                     classSpinner.setVisibility(View.VISIBLE);
 
                     //Gets the classes
-                    Class[] rawClasses = new Class[1];//Todo récupérer toutes les classes
+                    Class[] rawClasses = new Class[1];//Todo récupérer toutes les cours
                     String[] classes = new String[rawClasses.length];
 
                     for(int i = 0; i < rawClasses.length; i++){
@@ -286,8 +288,8 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
             case EVENT:
                 //Gets the values entered
                 String title = ((EditText)findViewById(R.id.editTextTitle)).getText().toString();
-                String description = ((EditText)findViewById(R.id.editTextTitle)).getText().toString();
-                String place = ((EditText)findViewById(R.id.editTextTitle)).getText().toString();
+                String description = ((EditText)findViewById(R.id.editTextDescription)).getText().toString();
+                String place = ((EditText)findViewById(R.id.editTextPlace)).getText().toString();
 
                 //Builds the event
                 if(place != ""){
