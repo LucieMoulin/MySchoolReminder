@@ -10,12 +10,6 @@ package com.example.myschoolreminder.Objects;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
-import com.example.myschoolreminder.Objects.CheckListElement;
-import com.example.myschoolreminder.Objects.Event;
-import com.example.myschoolreminder.Objects.Repetition;
-import com.example.myschoolreminder.Objects.RepetitionType;
-import com.example.myschoolreminder.Objects.Schedule;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -50,7 +44,7 @@ public class Trip extends Event {
 
         //Creation of the schedule
         Schedule schedule = new Schedule(startDate, endDate, getIdEvent());
-        Repetition repetition = new Repetition(schedule.getIdSchedule(), RepetitionType.None, 0, true);
+        Repetition repetition = new Repetition(schedule.getIdSchedule(), RepetitionType.NONE, 0, true);
 
         //Creation of the checklist
         for (String string : checklist) {

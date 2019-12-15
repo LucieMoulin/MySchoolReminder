@@ -14,6 +14,6 @@ import java.util.List;
 /**
  * Interface returning content
  */
-public interface GetEventsAsyncReturn {
-    public void returnEvents(List<Event> output);
+public interface GetEventsByIdsAsyncReturn {
+    public void returnEventsByIds(List<Event> output);
 }

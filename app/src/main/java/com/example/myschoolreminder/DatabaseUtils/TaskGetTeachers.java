@@ -10,9 +10,7 @@ package com.example.myschoolreminder.DatabaseUtils;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.myschoolreminder.Objects.Event;
 import com.example.myschoolreminder.Objects.Teacher;
-import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetEventsAsyncReturn;
 import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetTeachersAsyncReturn;
 
 import java.util.List;

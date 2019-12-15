@@ -15,6 +15,7 @@ import androidx.room.Update;
 
 import com.example.myschoolreminder.Objects.Schedule;
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -29,6 +30,14 @@ public interface ScheduleDAO {
      */
     @Query("SELECT idSchedule, schStartDate, schEndDate, fkEvent FROM t_schedule")
     List<Schedule> getSchedules();
+
+    /**
+     * Gets all the schedules before the selected date (included)
+     * @param selectedDate
+     * @return
+     */
+    @Query("SELECT idSchedule, schStartDate, schEndDate, fkEvent FROM t_schedule WHERE schEndDate <= (:selectedDate) OR schStartDate <= (:selectedDate)")
+    List<Schedule> getScheduleBeforeDate(Date selectedDate);
 
     /**
      * Inserts a schedule

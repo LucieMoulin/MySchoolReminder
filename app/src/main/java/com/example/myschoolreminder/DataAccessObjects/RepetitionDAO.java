@@ -31,6 +31,14 @@ public interface RepetitionDAO {
     List<Repetition> getRepetitions();
 
     /**
+     * Gets the repetition matching some schedules given
+     * @param schedulesIds The ids of the schedules matching the wanted repetitions
+     * @return
+     */
+    @Query("SELECT idRepetition, repAmount, repUntil, repMaximum, repIsActiveDuringHolidays, repRepetitionType, fkSchedule FROM t_repetition WHERE fkSchedule IN (:schedulesIds)")
+    List<Repetition> getRepetitionsByScheduleIds(int[] schedulesIds);
+
+    /**
      * Inserts a repetition
      * @param repetition
      */

@@ -14,11 +14,11 @@ import androidx.room.PrimaryKey;
  * Types of repetition
  */
 public enum RepetitionType{
-    None("Aucune",""),
-    Daily("Journalière","jours"),
-    Weekly("Hebdomadaire", "semaines"),
-    Monthly("Mensuelle", "mois"),
-    Yearly("Annuelle", "années");
+    NONE("Aucune",""),
+    DAILY("Journalière","jours"),
+    WEEKLY("Hebdomadaire", "semaines"),
+    MONTHLY("Mensuelle", "mois"),
+    YEARLY("Annuelle", "années");
 
     /**
      * Name

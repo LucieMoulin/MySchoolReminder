@@ -9,29 +9,30 @@ package com.example.myschoolreminder.DatabaseUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Pair;
 
 import com.example.myschoolreminder.Objects.Event;
-import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetEventsAsyncReturn;
+import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetEventsByIdsAsyncReturn;
 
 import java.util.List;
 
 /**
  * Task getting events
  */
-public class TaskGetEvents extends AsyncTask<Context, Void, List<Event>> {
+public class TaskGetEventsByIds extends AsyncTask<Pair<Context, List<Integer>>, Void, List<Event>> {
 
-    public GetEventsAsyncReturn delegate;
+    public GetEventsByIdsAsyncReturn delegate;
 
     /**
      * Gets the events asynchronously
-     * @param contexts
+     * @param pairs Pair with context and the list of ids
      * @return
      */
     @Override
-    protected List<Event> doInBackground(Context... contexts) {
-        CalendarDatabase database = CalendarDatabase.getInstance(contexts[0]);
+    protected List<Event> doInBackground(Pair<Context, List<Integer>> ...pairs) {
+        CalendarDatabase database = CalendarDatabase.getInstance(pairs[0].first);
 
-        return database.eventDAO().getEvents();
+        return database.eventDAO().getEventsByIds(pairs[0].second);
     }
 
     /**
@@ -40,6 +41,6 @@ public class TaskGetEvents extends AsyncTask<Context, Void, List<Event>> {
      */
     @Override
     protected void onPostExecute(List<Event> output) {
-        delegate.returnEvents(output);
+        delegate.returnEventsByIds(output);
     }
 }

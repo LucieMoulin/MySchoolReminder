@@ -37,6 +37,6 @@ public class Holiday extends Event {
         super(name, "");
 
         Schedule schedule = new Schedule(startDate, endDate, this.getIdEvent());
-        Repetition repetition = new Repetition(schedule.getIdSchedule(), RepetitionType.None, 0, true);
+        Repetition repetition = new Repetition(schedule.getIdSchedule(), RepetitionType.NONE, 0, true);
     }
 }

@@ -31,6 +31,14 @@ public interface EventDAO {
     List<Event> getEvents();
 
     /**
+     * Gets all the events by their id
+     * @param ids The list of  ids of the wanted events
+     * @return The list of events
+     */
+    @Query("SELECT idEvent, eveName, eveDescription, evePlace FROM t_event WHERE idEvent IN (:ids)")
+    List<Event> getEventsByIds(List<Integer> ids);
+
+    /**
      * Inserts an event
      * @param event
      */
