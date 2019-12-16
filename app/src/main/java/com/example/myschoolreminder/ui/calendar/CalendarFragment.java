@@ -539,7 +539,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                 }
 
                 //Get the events if not null
-6                if(validEventsIds.size() != 0){
+               if(validEventsIds.size() != 0){
                     TaskGetEventsByIds taskGetEventsByIds = new TaskGetEventsByIds();
                     taskGetEventsByIds.delegate = getEventsByIdsAsyncReturn();
                     taskGetEventsByIds.execute(new Pair(getActivity().getApplicationContext(), validEventsIds));
