@@ -506,6 +506,9 @@ public class ScheduleFragment extends Fragment {
     public Repetition getRepetition(int scheduleId){
         //Gets the repetition type, frequency, and activity during holidays
         RepetitionType type = RepetitionType.values()[((Spinner)getView().findViewById(R.id.spinnerRepetitionType)).getSelectedItemPosition()];
+        if(type == RepetitionType.NONE){
+            return null;
+        }
         int amount = Integer.parseInt(((EditText)getView().findViewById(R.id.editTextFrequency)).getText().toString());
         Boolean isActiveDuringHolidays = ((CheckBox)getView().findViewById(R.id.checkBoxDuringHolidays)).isChecked();
 
