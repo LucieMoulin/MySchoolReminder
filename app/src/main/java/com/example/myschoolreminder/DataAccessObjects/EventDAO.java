@@ -58,4 +58,10 @@ public interface EventDAO {
      */
     @Delete
     void deleteEvent(Event event);
+
+    /**
+     * Deletes all events
+     */
+    @Query("DELETE FROM t_event")
+    int deleteAllEvent();
 }

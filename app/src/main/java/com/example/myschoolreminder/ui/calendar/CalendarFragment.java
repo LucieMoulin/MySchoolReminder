@@ -1,7 +1,9 @@
 package com.example.myschoolreminder.ui.calendar;
 
 import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.myschoolreminder.DatabaseUtils.TaskDeleteEvents;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetEventsByIds;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetHolidays;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetRepetitionsByScheduleIds;
@@ -80,6 +83,8 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
             }
         });
 
+        //TaskDeleteEvents taskDeleteEvents = new TaskDeleteEvents();
+        //taskDeleteEvents.execute(getActivity().getApplicationContext());
 
         //Get the calendar widget
         CalendarView calendar = view.findViewById(R.id.calendarView);
@@ -100,7 +105,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                 Date selectedDate = new Date(calendarView.getDate());
 
                 //If the date is in holidays
-                Boolean isDuringHolidays = false;
+                boolean isDuringHolidays = false;
 
                 //Instance a getSchedulesBeforeDate task
                 TaskGetSchedulesBeforeDate taskGetSchedulesBeforeDate = new TaskGetSchedulesBeforeDate();
@@ -534,13 +539,16 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                 }
 
                 //Get the events if not null
-                if(validEventsIds.size() != 0){
+6                if(validEventsIds.size() != 0){
                     TaskGetEventsByIds taskGetEventsByIds = new TaskGetEventsByIds();
+                    taskGetEventsByIds.delegate = getEventsByIdsAsyncReturn();
                     taskGetEventsByIds.execute(new Pair(getActivity().getApplicationContext(), validEventsIds));
                 }
             }
         });
     }
+
+    private GetEventsByIdsAsyncReturn getEventsByIdsAsyncReturn(){return this;}
 
     /**
      * Return the events by ids

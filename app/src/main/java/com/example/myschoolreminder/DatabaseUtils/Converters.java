@@ -53,6 +53,23 @@ public class Converters {
      */
     @TypeConverter
     public static RepetitionType stringToType(String value){
-        return RepetitionType.valueOf(value);
+        //return RepetitionType.valueOf(value);
+        switch(value){
+            default:
+            case "Aucune":
+                return RepetitionType.NONE;
+
+            case "Journalière":
+                return RepetitionType.DAILY;
+
+            case "Hebdomadaire":
+                return RepetitionType.WEEKLY;
+
+            case "Mensuelle":
+                return RepetitionType.MONTHLY;
+
+            case "Annuelle":
+                return RepetitionType.YEARLY;
+        }
     }
 }
