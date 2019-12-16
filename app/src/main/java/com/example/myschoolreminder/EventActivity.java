@@ -113,9 +113,11 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                     //Gets the repetition of the schedule
                     Repetition repetition = fragment.getRepetition((int) scheduleID);
 
-                    //Saves the repetition
-                    TaskAddRepetition taskAddRepetition = new TaskAddRepetition();
-                    taskAddRepetition.execute(new Pair<Context, Repetition>(getApplicationContext(), repetition));
+                    if(repetition != null){
+                        //Saves the repetition
+                        TaskAddRepetition taskAddRepetition = new TaskAddRepetition();
+                        taskAddRepetition.execute(new Pair<Context, Repetition>(getApplicationContext(), repetition));
+                    }
                 }
 
                 finish();

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetEventsByIdsA
 import com.example.myschoolreminder.R;
 
 import org.joda.time.DateTime;
+import org.w3c.dom.Text;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -40,19 +42,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
     private CalendarViewModel calendarViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        calendarViewModel =
-                ViewModelProviders.of(this).get(CalendarViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        calendarViewModel = ViewModelProviders.of(this).get(CalendarViewModel.class);
         View root = inflater.inflate(R.layout.fragment_calendar, container, false);
-        final TextView textView = root.findViewById(R.id.text_calendar);
-        calendarViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-
         return root;
     }
 
@@ -592,7 +584,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                 }
 
                 //Get the events if not null
-               if(validEventsIds.size() != 0){
+                if(validEventsIds.size() != 0){
                     TaskGetEventsByIds taskGetEventsByIds = new TaskGetEventsByIds();
                     taskGetEventsByIds.delegate = getEventsByIdsAsyncReturn();
                     taskGetEventsByIds.execute(new Pair(getActivity().getApplicationContext(), validEventsIds));
@@ -605,12 +597,28 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
     private GetEventsByIdsAsyncReturn getEventsByIdsAsyncReturn(){return this;}
 
     /**
-     * Return the events by ids
+     * Return the events by ids, and shows them
      * @param output
      */
     @Override
     public void returnEventsByIds(List<Event> output) {
+        if(output.size() > 0){
+            //Gets the layout
+            LinearLayout layout = getView().findViewById(R.id.layoutEvents);
+            //layout.removeAllViews();
 
+            //For each event returned
+            for(Event event : output){
+                TextView eventView = new TextView(getContext());
+
+                //TODO make it so that it's not ugly
+
+                eventView.setText(event.getName());
+
+                layout.addView(eventView);
+
+                //TODO Open details when the textview is clicked
+            }
+        }
     }
-
 }
