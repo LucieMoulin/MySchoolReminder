@@ -77,50 +77,55 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
              */
             @Override
             public void onClick(View view) {
-                //Gets the event
-                Event event = getEvent();
+                //Checks if the values entered are valid
+                if(isValid()){
+                    //Gets the event
+                    Event event = getEvent();
 
-                //Save the event into the database
-                TaskAddEvent taskAddEvent = new TaskAddEvent();
-                taskAddEvent.execute(new Pair<Context, Event>(getApplicationContext(), event));
+                    //Save the event into the database
+                    TaskAddEvent taskAddEvent = new TaskAddEvent();
+                    taskAddEvent.execute(new Pair<Context, Event>(getApplicationContext(), event));
 
-                //Tries to get the id of the event
-                long eventId = 0;
-                try {
-                    eventId = taskAddEvent.get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                //Gets the schedule of each fragment, and saves it
-                for (ScheduleFragment fragment : fragments) {
-                    Schedule schedule = fragment.getSchedule(((int) eventId));
-
-                    TaskAddSchedule taskAddSchedule = new TaskAddSchedule();
-                    taskAddSchedule.execute(new Pair<Context, Schedule>(getApplicationContext(), schedule));
-
-                    long scheduleID = 0;
+                    //Tries to get the id of the event
+                    long eventId = 0;
                     try {
-                        scheduleID = taskAddSchedule.get();
+                        eventId = taskAddEvent.get();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    //Gets the repetition of the schedule
-                    Repetition repetition = fragment.getRepetition((int) scheduleID);
+                    //Gets the schedule of each fragment, and saves it
+                    for (ScheduleFragment fragment : fragments) {
+                        Schedule schedule = fragment.getSchedule(((int) eventId));
 
-                    if(repetition != null){
-                        //Saves the repetition
-                        TaskAddRepetition taskAddRepetition = new TaskAddRepetition();
-                        taskAddRepetition.execute(new Pair<Context, Repetition>(getApplicationContext(), repetition));
+                        TaskAddSchedule taskAddSchedule = new TaskAddSchedule();
+                        taskAddSchedule.execute(new Pair<Context, Schedule>(getApplicationContext(), schedule));
+
+                        long scheduleID = 0;
+                        try {
+                            scheduleID = taskAddSchedule.get();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Gets the repetition of the schedule
+                        Repetition repetition = fragment.getRepetition((int) scheduleID);
+
+                        if(repetition != null){
+                            //Saves the repetition
+                            TaskAddRepetition taskAddRepetition = new TaskAddRepetition();
+                            taskAddRepetition.execute(new Pair<Context, Repetition>(getApplicationContext(), repetition));
+                        }
                     }
-                }
 
-                finish();
+                    finish();
+                }else{
+                    //TODO show error message
+                }
             }
         });
 
@@ -323,5 +328,25 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
         }
 
         return event;
+    }
+
+    /**
+     * Checks if the values entered are valid
+     * @return
+     */
+    private Boolean isValid(){
+        Boolean valid = true;
+
+        Event event = getEvent();
+
+        //The event is valid if it has a title
+        valid = valid && event.getName() != "";
+
+        //The schedule(s) are valid
+        for (ScheduleFragment fragment: fragments) {
+            valid = valid && fragment.isValid();
+        }
+
+        return  valid;
     }
 }

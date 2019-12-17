@@ -507,7 +507,7 @@ public class ScheduleFragment extends Fragment {
         //Gets the repetition type, frequency, and activity during holidays
         RepetitionType type = RepetitionType.values()[((Spinner)getView().findViewById(R.id.spinnerRepetitionType)).getSelectedItemPosition()];
         if(type == RepetitionType.NONE){
-            return null;
+            return new Repetition(scheduleId, RepetitionType.NONE, 0, true);
         }
         int amount = Integer.parseInt(((EditText)getView().findViewById(R.id.editTextFrequency)).getText().toString());
         Boolean isActiveDuringHolidays = ((CheckBox)getView().findViewById(R.id.checkBoxDuringHolidays)).isChecked();
@@ -538,5 +538,42 @@ public class ScheduleFragment extends Fragment {
                 //Returns new repetition with maimum amount of repetitions
                 return new Repetition(scheduleId, type, amount, maximumOfRepetitions, isActiveDuringHolidays);
         }
+    }
+
+    /**
+     * Checks if the values entered are valid
+     * @return
+     */
+    public Boolean isValid(){
+        Boolean valid = true;
+
+        Schedule schedule = getSchedule(0);
+
+        //Checks if the end date is after the start date
+        valid = valid && (schedule.getStartDate().before(schedule.getEndDate()));
+
+        Repetition repetition = getRepetition(0);
+
+        //Checks the repetition
+        switch (repetition.getType()){
+            case DAILY:
+            case WEEKLY:
+            case MONTHLY:
+            case YEARLY:
+                //If the repetition is not NONE, check if the amount is greater than 0
+                valid = valid && repetition.getAmount() > 0;
+
+                //Check if there is only one limit set
+                if(repetition.getMaximum() != -1){
+                    //If the maximum is set, the until date isn't
+                    valid = valid && repetition.getUntil() == null;
+                }
+                else if(repetition.getUntil() != null){
+                    //If the until date is set, the maximum isn't
+                    valid = valid && repetition.getMaximum() == -1;
+                }
+        }
+
+        return valid;
     }
 }

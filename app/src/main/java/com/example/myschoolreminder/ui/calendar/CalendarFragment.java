@@ -245,7 +245,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                         }
                                     }
                                     //If the limit is a maximum of repetitions
-                                    else if (r.getMaximum() != 0) {
+                                    else if (r.getMaximum() != -1) {
 
                                         //Until the repetitions amount is bigger than the max
                                         for (int i = 0; i < r.getMaximum(); i++) {
@@ -340,7 +340,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                         }
                                     }
                                     //If the limit is a maximum of repetitions
-                                    else if (r.getMaximum() > 0) {
+                                    else if (r.getMaximum() > -1) {
 
                                         //Until the repetitions amount is bigger than the max
                                         for (int i = 0; i < r.getMaximum(); i++) {
@@ -435,7 +435,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                         }
                                     }
                                     //If the limit is a maximum of repetitions
-                                    else if (r.getMaximum() != 0) {
+                                    else if (r.getMaximum() != -1) {
 
                                         //Until the repetitions amount is bigger than the max
                                         for (int i = 0; i < r.getMaximum(); i++) {
@@ -528,7 +528,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                         }
                                     }
                                     //If the limit is a maximum of repetitions
-                                    else if (r.getMaximum() != 0) {
+                                    else if (r.getMaximum() != -1) {
 
                                         //Until the repetitions amount is bigger than the max
                                         for (int i = 0; i < r.getMaximum(); i++) {
@@ -605,7 +605,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         if(output.size() > 0){
             //Gets the layout
             LinearLayout layout = getView().findViewById(R.id.layoutEvents);
-            //layout.removeAllViews();
+            layout.removeAllViews();
 
             //For each event returned
             for(Event event : output){
