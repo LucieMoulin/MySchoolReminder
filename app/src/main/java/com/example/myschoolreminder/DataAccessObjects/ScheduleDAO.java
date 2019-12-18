@@ -36,7 +36,7 @@ public interface ScheduleDAO {
      * @param selectedDate
      * @return
      */
-    @Query("SELECT idSchedule, schStartDate, schEndDate, fkEvent FROM t_schedule WHERE schStartDate < (:selectedDate)")
+    @Query("SELECT idSchedule, schStartDate, schEndDate, fkEvent FROM t_schedule WHERE schStartDate <= (:selectedDate)")
     List<Schedule> getScheduleBeforeDate(Date selectedDate);
 
     /**

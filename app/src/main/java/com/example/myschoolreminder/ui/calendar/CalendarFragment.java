@@ -121,10 +121,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                 LinearLayout layout = getView().findViewById(R.id.layoutEvents);
                 layout.removeAllViews();
 
-                DateTime tempDate = new DateTime(year, month + 1, dayOfMonth, 0, 0,0);
-                tempDate = tempDate.plusDays(1);
-
-                Date selectedDate = tempDate.toDate();
+                Date selectedDate = new Date(year - 1900, month, dayOfMonth, 23,59,59);
 
                 //If the date is in holidays
                 boolean isDuringHolidays = false;
@@ -256,9 +253,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //Until the end test date is bigger than the day until when the event should be repeated
                                         while (jodaUntilDate.isAfter(jodaTestEndDate.toInstant())) {
-                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -276,6 +270,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
                                         }
                                     }
                                     //If the limit is a maximum of repetitions
@@ -283,9 +280,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //Until the repetitions amount is bigger than the max
                                         for (int i = 0; i < r.getMaximum(); i++) {
-                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -303,6 +297,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
                                         }
                                     }
 
@@ -311,9 +308,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //While the test end date is before the selected date
                                         while (jodaSelectedDate.isAfter(jodaTestEndDate)) {
-                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -326,6 +320,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
                                         }
                                     }
 
@@ -351,9 +348,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //Until the end test date is bigger than the day until when the event should be repeated
                                         while (jodaUntilDate.isAfter(jodaTestEndDate.toInstant())) {
-                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -371,6 +365,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
                                         }
                                     }
                                     //If the limit is a maximum of repetitions
@@ -378,9 +375,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //Until the repetitions amount is bigger than the max
                                         for (int i = 0; i < r.getMaximum(); i++) {
-                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -398,6 +392,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
                                         }
                                     }
 
@@ -406,9 +403,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //While the test end date is before the selected date
                                         while (jodaSelectedDate.isAfter(jodaTestEndDate)) {
-                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -421,6 +415,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
                                         }
                                     }
 
@@ -446,9 +443,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //Until the end test date is bigger than the day until when the event should be repeated
                                         while (jodaUntilDate.isAfter(jodaTestEndDate.toInstant())) {
-                                            jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -466,6 +460,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
                                         }
                                     }
                                     //If the limit is a maximum of repetitions
@@ -501,9 +498,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //While the test end date is before the selected date
                                         while (jodaSelectedDate.isAfter(jodaTestEndDate)) {
-                                            jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -516,6 +510,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
                                         }
                                     }
 
@@ -539,9 +536,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //Until the end test date is bigger than the day until when the event should be repeated
                                         while (jodaUntilDate.isAfter(jodaTestEndDate.toInstant())) {
-                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -559,6 +553,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
                                         }
                                     }
                                     //If the limit is a maximum of repetitions
@@ -566,8 +563,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //Until the repetitions amount is bigger than the max
                                         for (int i = 0; i < r.getMaximum(); i++) {
-                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
 
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
@@ -586,6 +581,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
                                         }
                                     }
 
@@ -594,9 +592,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                         //While the test end date is before the selected date
                                         while (jodaSelectedDate.isAfter(jodaTestEndDate)) {
-                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
@@ -609,6 +604,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
                                                 break;
                                             }
+
+                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
+                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
                                         }
                                     }
                                     break;
