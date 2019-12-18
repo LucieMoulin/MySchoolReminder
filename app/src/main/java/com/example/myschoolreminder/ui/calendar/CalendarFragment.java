@@ -8,22 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.myschoolreminder.DatabaseUtils.TaskDeleteEvents;
-import com.example.myschoolreminder.DatabaseUtils.TaskGetEvents;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetEventsByIds;
-import com.example.myschoolreminder.DatabaseUtils.TaskGetHolidays;
+import com.example.myschoolreminder.DatabaseUtils.TaskIsSelectedDateDuringHolidays;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetRepetitionsByScheduleIds;
-import com.example.myschoolreminder.DatabaseUtils.TaskGetSchedules;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetSchedulesBeforeDate;
 import com.example.myschoolreminder.EventTypeMenuActivity;
 import com.example.myschoolreminder.Objects.Event;
@@ -34,11 +29,9 @@ import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetEventsByIdsA
 import com.example.myschoolreminder.R;
 
 import org.joda.time.DateTime;
-import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -154,21 +147,8 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         int[] allSchedulesIds = getSchedulesId(schedulesBeforeDate);
 
         //Gets the holidays
-        List<Holiday> holidays = getHolidays();
+        selectedDateDuringHolidays = IsDuringHolidays(selectedDate);
 
-        //Gets the ids of the holidays
-        int[] holidaysIds = getHolidaysId(holidays);
-
-        //Checks if the date is in holidays
-        for (Schedule s: schedulesBeforeDate) {
-            //If schedule is for a holiday
-            if(Arrays.asList(holidaysIds).contains(s.getEventId())){
-                //Checks if the current date is in holidays
-                if(selectedDate.equals(s.getStartDate()) || selectedDate.equals(s.getEndDate()) || (selectedDate.after(s.getStartDate()) && selectedDate.before(s.getEndDate()))){
-                    selectedDateDuringHolidays = true;
-                }
-            }
-        }
 
         //Get the repetitions linked to the schedules
         List<Repetition> allRepetitions = getRepetitions(allSchedulesIds);
@@ -258,24 +238,24 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
     }
 
     /**
-     * Gets all the holidays
+     * Check if the selected date is during holidays
      * @return
      */
-    private List<Holiday> getHolidays(){
-        TaskGetHolidays taskGetHolidays = new TaskGetHolidays();
-        taskGetHolidays.execute(getActivity().getApplicationContext());
+    private Boolean IsDuringHolidays(Date selectedDate){
+        TaskIsSelectedDateDuringHolidays taskIsSelectedDateDuringHolidays = new TaskIsSelectedDateDuringHolidays();
+        taskIsSelectedDateDuringHolidays.execute(new Pair<>(getActivity().getApplicationContext(),selectedDate));
 
-        List<Holiday> holidays = new ArrayList<>();
+        int isDuringHolidays = 0;
 
         try {
-            holidays = taskGetHolidays.get();
+            isDuringHolidays = taskIsSelectedDateDuringHolidays.get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        return  holidays;
+        return  isDuringHolidays > 0;
     }
 
     /**

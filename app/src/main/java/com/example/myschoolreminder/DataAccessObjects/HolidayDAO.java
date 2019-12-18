@@ -15,6 +15,7 @@ import androidx.room.Update;
 
 import com.example.myschoolreminder.Objects.Holiday;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +30,15 @@ public interface HolidayDAO {
      */
     @Query("SELECT idEvent, eveName, eveDescription, evePlace FROM t_holiday")
     List<Holiday> getHolidays();
+
+
+    /**
+     * Select the amount of holidays for a date (Basically it's to check is a date is during holidays or not)
+     * @param selectedDate
+     * @return
+     */
+    @Query("SELECT COUNT(*) FROM t_holiday INNER JOIN t_schedule ON idEvent = fkEvent WHERE schStartDate <= (:selectedDate) AND schEndDate >= (:selectedDate)")
+    int isSelectedDateDuringHolidays(Date selectedDate);
 
     /**
      * Inserts a holiday

@@ -12,8 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.myschoolreminder.DatabaseUtils.TaskGetHolidays;
-import com.example.myschoolreminder.DatabaseUtils.TaskGetRepetitionsByScheduleIds;
+import com.example.myschoolreminder.DatabaseUtils.TaskIsSelectedDateDuringHolidays;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetStartDateOfNextHolidays;
 import com.example.myschoolreminder.Objects.Holiday;
 import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetStartDateOfNextHolidaysAsyncReturn;
@@ -80,26 +79,6 @@ public class CountdownFragment extends Fragment implements GetStartDateOfNextHol
     {
         TextView txtView = getView().findViewById(R.id.txtCountdown);
 
-        //Get the holidays
-        TaskGetHolidays taskGetHolidays = new TaskGetHolidays();
-        taskGetHolidays.execute(getActivity().getApplicationContext());
-
-        List<Holiday> holidays = new ArrayList<>();
-
-        try {
-            holidays = taskGetHolidays.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        int[] holidaysIds = new int[holidays.size()];
-
-        //Get the ids of all the holidays
-        for(int i =0; i < holidays.size(); i++){
-            holidaysIds[i] = holidays.get(i).getIdEvent();
-        }
 
     }
 
