@@ -32,11 +32,11 @@ public interface ScheduleDAO {
     List<Schedule> getSchedules();
 
     /**
-     * Gets all the schedules before the selected date (included)
+     * Gets all the schedules before the selected date
      * @param selectedDate
      * @return
      */
-    @Query("SELECT idSchedule, schStartDate, schEndDate, fkEvent FROM t_schedule WHERE schStartDate <= (:selectedDate)")
+    @Query("SELECT idSchedule, schStartDate, schEndDate, fkEvent FROM t_schedule WHERE schStartDate < (:selectedDate)")
     List<Schedule> getScheduleBeforeDate(Date selectedDate);
 
     /**
