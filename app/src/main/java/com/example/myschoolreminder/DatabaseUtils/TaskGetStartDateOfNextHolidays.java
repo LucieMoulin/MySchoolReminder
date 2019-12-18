@@ -15,6 +15,7 @@ import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetStartDateOfN
 import java.util.Date;
 
 public class TaskGetStartDateOfNextHolidays extends AsyncTask<Context, Void, Date> {
+
     public GetStartDateOfNextHolidaysAsyncReturn delegate;
 
     /**
@@ -25,7 +26,7 @@ public class TaskGetStartDateOfNextHolidays extends AsyncTask<Context, Void, Dat
     @Override
     protected Date doInBackground(Context... contexts) {
         CalendarDatabase database = CalendarDatabase.getInstance(contexts[0]);
-        return database.scheduleDAO().getNextHolidayStartDay(/*TODO current date*/);
+        return database.scheduleDAO().getNextHolidayStartDay(new Date(System.currentTimeMillis()));
     }
 
     /**

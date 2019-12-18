@@ -17,8 +17,6 @@ import java.util.List;
 
 public class TaskGetHolidays extends AsyncTask<Context, Void, List<Holiday>> {
 
-    public GetStartDateOfNextHolidaysAsyncReturn delegate;
-
     /**
      * Get the holidays asynchronously
      * @param contexts The context
@@ -30,10 +28,4 @@ public class TaskGetHolidays extends AsyncTask<Context, Void, List<Holiday>> {
         return database.holidayDAO().getHolidays();
     }
 
-    /**
-     * Launches the delegate method that treats the data
-     * @param holidays The holidays
-     */
-    @Override
-    protected void onPostExecute(List<Holiday> holidays) {delegate.returnStartDateOfNextHolidays(holidays);}
 }

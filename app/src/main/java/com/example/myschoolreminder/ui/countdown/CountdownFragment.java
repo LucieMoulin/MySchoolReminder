@@ -13,11 +13,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.myschoolreminder.DatabaseUtils.TaskGetHolidays;
+import com.example.myschoolreminder.DatabaseUtils.TaskGetRepetitionsByScheduleIds;
+import com.example.myschoolreminder.DatabaseUtils.TaskGetStartDateOfNextHolidays;
 import com.example.myschoolreminder.Objects.Holiday;
 import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetStartDateOfNextHolidaysAsyncReturn;
 import com.example.myschoolreminder.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,7 +32,7 @@ public class CountdownFragment extends Fragment implements GetStartDateOfNextHol
 
     Timer timer;
 
-    List<Holiday> holidays;
+    Date startDateOfNextHolidays;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,9 +54,9 @@ public class CountdownFragment extends Fragment implements GetStartDateOfNextHol
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
 
-        TaskGetHolidays taskGetHolidays = new TaskGetHolidays();
-        taskGetHolidays.delegate = this;
-        taskGetHolidays.execute(getActivity().getApplicationContext());
+        TaskGetStartDateOfNextHolidays taskGetStartDateOfNextHolidays = new TaskGetStartDateOfNextHolidays();
+        taskGetStartDateOfNextHolidays.delegate = this;
+        taskGetStartDateOfNextHolidays.execute(getActivity().getApplicationContext());
     }
 
     /**
@@ -61,10 +64,10 @@ public class CountdownFragment extends Fragment implements GetStartDateOfNextHol
      * @param output The holidays
      */
     @Override
-    public void returnHolidays(List<Holiday> output) {
+    public void returnStartDateOfNextHolidays(Date output) {
 
         //Set the holidays
-        holidays = output;
+        startDateOfNextHolidays = output;
 
         timer = new Timer();
         timer.schedule(new CountDownTask(), 1000);

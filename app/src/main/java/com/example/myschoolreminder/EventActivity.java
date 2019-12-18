@@ -191,7 +191,7 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                     classSpinner.setVisibility(View.VISIBLE);
 
                     //Gets the classes
-                    Class[] rawClasses = new Class[1];//Todo récupérer toutes les cours
+                    Class[] rawClasses = new Class[1];//Todo récupérer tous les cours
                     String[] classes = new String[rawClasses.length];
 
                     for(int i = 0; i < rawClasses.length; i++){
