@@ -1,8 +1,8 @@
 /*
  * ETML
  * Authors : Lucie Moulin and Léa Cherpillod
- * Date : 15.12.2019
- * Description : Task getting holidays
+ * Date : 18.12.2019
+ * Description : Task getting the start date of the next holidays
  */
 
 package com.example.myschoolreminder.DatabaseUtils;
@@ -10,13 +10,11 @@ package com.example.myschoolreminder.DatabaseUtils;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.myschoolreminder.Objects.Holiday;
 import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetStartDateOfNextHolidaysAsyncReturn;
 
-import java.util.List;
+import java.util.Date;
 
-public class TaskGetHolidays extends AsyncTask<Context, Void, List<Holiday>> {
-
+public class TaskGetStartDateOfNextHolidays extends AsyncTask<Context, Void, Date> {
     public GetStartDateOfNextHolidaysAsyncReturn delegate;
 
     /**
@@ -25,15 +23,15 @@ public class TaskGetHolidays extends AsyncTask<Context, Void, List<Holiday>> {
      * @return The holidays
      */
     @Override
-    protected List<Holiday> doInBackground(Context... contexts) {
+    protected Date doInBackground(Context... contexts) {
         CalendarDatabase database = CalendarDatabase.getInstance(contexts[0]);
-        return database.holidayDAO().getHolidays();
+        return database.scheduleDAO().getNextHolidayStartDay(/*TODO current date*/);
     }
 
     /**
      * Launches the delegate method that treats the data
-     * @param holidays The holidays
+     * @param start The start date
      */
     @Override
-    protected void onPostExecute(List<Holiday> holidays) {delegate.returnStartDateOfNextHolidays(holidays);}
+    protected void onPostExecute(Date start) {delegate.returnStartDateOfNextHolidays(start);}
 }

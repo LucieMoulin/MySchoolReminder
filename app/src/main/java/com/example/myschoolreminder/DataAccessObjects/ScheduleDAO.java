@@ -40,6 +40,14 @@ public interface ScheduleDAO {
     List<Schedule> getScheduleBeforeDate(Date selectedDate);
 
     /**
+     * Get the start day of the next holidays
+     * @param currentDate the current date
+     * @return The date
+     */
+    @Query("SELECT schStartDate FROM t_schedule INNER JOIN t_holiday ON idEvent = fkEvent WHERE schStartDate > (:currentDate) ORDER BY schStartDate ASC LIMIT 1")
+    Date getNextHolidayStartDay(Date currentDate);
+
+    /**
      * Inserts a schedule
      * @param schedule
      */

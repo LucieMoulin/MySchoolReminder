@@ -12,16 +12,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.myschoolreminder.DatabaseUtils.TaskGetHolidays;
+import com.example.myschoolreminder.Objects.Holiday;
+import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetStartDateOfNextHolidaysAsyncReturn;
 import com.example.myschoolreminder.R;
 
-import org.joda.time.DateTime;
-import org.joda.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
-import java.util.Date;
-
-public class CountdownFragment extends Fragment {
+public class CountdownFragment extends Fragment implements GetStartDateOfNextHolidaysAsyncReturn {
 
     private CountdownViewModel countdownViewModel;
+
+    Timer timer;
+
+    List<Holiday> holidays;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,12 +51,63 @@ public class CountdownFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
 
-        DateTime start = DateTime.now();
-        DateTime end = new DateTime(2022, 3, 24, 18, 0, 0);
+        TaskGetHolidays taskGetHolidays = new TaskGetHolidays();
+        taskGetHolidays.delegate = this;
+        taskGetHolidays.execute(getActivity().getApplicationContext());
+    }
 
-        Period period = new Period(start, end);
+    /**
+     * Get the holidays
+     * @param output The holidays
+     */
+    @Override
+    public void returnHolidays(List<Holiday> output) {
 
-        TextView countdown = view.findViewById(R.id.txvCountdown);
-        countdown.setText(period.getYears() + " années " + period.getMonths() + " mois " + period.getWeeks() + " semaines " + period.getDays() + " jours");
+        //Set the holidays
+        holidays = output;
+
+        timer = new Timer();
+        timer.schedule(new CountDownTask(), 1000);
+    }
+
+    /**
+     * Display the countdown
+     */
+    private void displayCountDown()
+    {
+        TextView txtView = getView().findViewById(R.id.txtCountdown);
+
+        //Get the holidays
+        TaskGetHolidays taskGetHolidays = new TaskGetHolidays();
+        taskGetHolidays.execute(getActivity().getApplicationContext());
+
+        List<Holiday> holidays = new ArrayList<>();
+
+        try {
+            holidays = taskGetHolidays.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        int[] holidaysIds = new int[holidays.size()];
+
+        //Get the ids of all the holidays
+        for(int i =0; i < holidays.size(); i++){
+            holidaysIds[i] = holidays.get(i).getIdEvent();
+        }
+
+    }
+
+    /**
+     * Class to implement the countdown for the timer
+     */
+    class CountDownTask extends TimerTask{
+
+        @Override
+        public void run() {
+            displayCountDown();
+        }
     }
 }
