@@ -509,7 +509,12 @@ public class ScheduleFragment extends Fragment {
         if(type == RepetitionType.NONE){
             return new Repetition(scheduleId, RepetitionType.NONE, 0, true);
         }
-        int amount = Integer.parseInt(((EditText)getView().findViewById(R.id.editTextFrequency)).getText().toString());
+        int amount = 0;
+        try {
+            amount = Integer.parseInt(((EditText)getView().findViewById(R.id.editTextFrequency)).getText().toString());
+        } catch (NumberFormatException e) {
+        }
+
         Boolean isActiveDuringHolidays = ((CheckBox)getView().findViewById(R.id.checkBoxDuringHolidays)).isChecked();
 
         //Depending of the type of limit selected, create the Repetition
