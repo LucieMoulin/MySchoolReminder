@@ -104,6 +104,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
              */
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
+                //Resets the events layout
+                LinearLayout layout = getView().findViewById(R.id.layoutEvents);
+                layout.removeAllViews();
 
                 Date selectedDate = new Date(year - 1900, month, dayOfMonth);
 
@@ -620,7 +623,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         if(output.size() > 0){
             //Gets the layout
             LinearLayout layout = getView().findViewById(R.id.layoutEvents);
-            layout.removeAllViews();
 
             //For each event returned
             for(Event event : output){

@@ -340,7 +340,7 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
         Event event = getEvent();
 
         //The event is valid if it has a title
-        valid = valid && event.getName() != "";
+        valid = valid && !event.getName().isEmpty();
 
         //The schedule(s) are valid
         for (ScheduleFragment fragment: fragments) {

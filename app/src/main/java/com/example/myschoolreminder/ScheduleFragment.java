@@ -64,8 +64,8 @@ public class ScheduleFragment extends Fragment {
      * Date ans time formats
      */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-    private SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
-    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yy hh:mm");
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 
     /**
      * DatePickerDialog for the start date
@@ -139,7 +139,7 @@ public class ScheduleFragment extends Fragment {
          */
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            calendar.set(Calendar.HOUR, hourOfDay);
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute);
             updateStartTime();
         }
