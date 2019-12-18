@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -75,34 +76,10 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
             }
         });
 
+        //Deletes all events (Debug)
         //TaskDeleteEvents taskDeleteEvents = new TaskDeleteEvents();
         //taskDeleteEvents.execute(getActivity().getApplicationContext());
 
-        TaskGetEvents taskGetEvents = new TaskGetEvents();
-        taskGetEvents.execute(getActivity().getApplicationContext());
-
-        List<Event> allEvents = new ArrayList<>();
-
-        try {
-            allEvents = taskGetEvents.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        TaskGetSchedules taskGetSchedules = new TaskGetSchedules();
-        taskGetSchedules.execute(getActivity().getApplicationContext());
-
-        List<Schedule> allSchedules = new ArrayList<>();
-
-        try {
-            allSchedules = taskGetSchedules.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         //Get the calendar widget
         CalendarView calendar = view.findViewById(R.id.calendarView);
 
@@ -117,515 +94,15 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
              */
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                //Resets the events layout
-                LinearLayout layout = getView().findViewById(R.id.layoutEvents);
-                layout.removeAllViews();
-
-                Date selectedDate = new Date(year - 1900, month, dayOfMonth, 23,59,59);
-
-                //If the date is in holidays
-                boolean isDuringHolidays = false;
-
-                //Instance a getSchedulesBeforeDate task
-                TaskGetSchedulesBeforeDate taskGetSchedulesBeforeDate = new TaskGetSchedulesBeforeDate();
-                taskGetSchedulesBeforeDate.execute(new Pair<>(getActivity().getApplicationContext(), selectedDate));
-
-                List<Schedule> schedulesBeforeDate = new ArrayList<>();
-
-                //Get the schedules
-                try {
-                    schedulesBeforeDate = taskGetSchedulesBeforeDate.get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
-                int[] allSchedulesIds = new int[schedulesBeforeDate.size()];
-
-                //Get the id of all schedules
-                for (int i = 0; i < schedulesBeforeDate.size(); i++){
-                    allSchedulesIds[i] = schedulesBeforeDate.get(i).getIdSchedule();
-                }
-
-                //Get the holidays
-                TaskGetHolidays taskGetHolidays = new TaskGetHolidays();
-                taskGetHolidays.execute(getActivity().getApplicationContext());
-
-                List<Holiday> holidays = new ArrayList<>();
-
-                try {
-                    holidays = taskGetHolidays.get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                int[] holidaysIds = new int[holidays.size()];
-
-                //Get the ids of all the holidays
-                for(int i =0; i < holidays.size(); i++){
-                    holidaysIds[i] = holidays.get(i).getIdEvent();
-                }
-
-                //Check if the date is in holidays
-                for (Schedule s: schedulesBeforeDate) {
-                    //If schedule is for a holiday
-                    if(Arrays.asList(holidaysIds).contains(s.getEventId())){
-                        //Check if the actual date is in holidays
-                        if(selectedDate.equals(s.getStartDate()) || selectedDate.equals(s.getEndDate()) || (selectedDate.after(s.getStartDate()) && selectedDate.before(s.getEndDate()))){
-                            isDuringHolidays = true;
-                        }
-                    }
-                }
-
-                //Get the repetitions linked to the schedules
-                TaskGetRepetitionsByScheduleIds taskGetRepetitionsByScheduleIds = new TaskGetRepetitionsByScheduleIds();
-                taskGetRepetitionsByScheduleIds.execute(new Pair<>(getActivity().getApplicationContext(), allSchedulesIds));
-
-                List<Repetition> allRepetitions = new ArrayList<>();
-
-                try {
-                    allRepetitions = taskGetRepetitionsByScheduleIds.get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                //List to stock valid repetitions
-                List<Integer> validEventsIds = new ArrayList<>();
-
-                DateTime jodaSelectedDate = new DateTime(selectedDate);
-
-                for (Repetition r: allRepetitions){
-
-                    //If the date is during holidays, check that the repetition can be done during holiday
-                    if(isDuringHolidays && !r.getActiveDuringHolidays()){
-                        continue;
-                    }
-
-                    //Find the schedule linked to the repetition
-                    for (Schedule s: schedulesBeforeDate) {
-                        //Check if the schedule matches
-                        if (s.getIdSchedule() == r.getScheduleId()) {
-
-                            //The test dates in joda time
-                            DateTime jodaTestStartDate = new DateTime(s.getStartDate());
-                            DateTime jodaTestEndDate = new DateTime(s.getEndDate());
-
-                            //Declare the datetimes to use for comparison
-                            DateTime start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                            DateTime end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                            DateTime selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-
-                            switch (r.getType()) {
-
-                                case NONE:
-
-                                    //If the selected date is the start or the end date or is between start and end
-                                    //TODO Add the verification if the event is on several days and the selected date is between those dates (do this for every case in the switch)
-
-                                    //If the date matches and the holiday condition is verified
-                                    if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                        //Add the event's id
-                                        validEventsIds.add(s.getEventId());
-                                        break;
-                                    }
-
-                                    break;
-
-                                case DAILY:
-
-                                    //Get the limit
-                                    //If the limit is a date
-                                    if (r.getUntil() != null) {
-
-                                        //Check if the until date is smaller than the selected date
-                                        if (r.getUntil().before(selectedDate)) {
-                                            break;
-                                        }
-                                        DateTime jodaUntilDate = new DateTime(r.getUntil());
-
-                                        //Until the end test date is bigger than the day until when the event should be repeated
-                                        while (jodaUntilDate.isAfter(jodaTestEndDate.toInstant())) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (selected.isBefore(start)) {
-                                                break;
-                                            }
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
-                                        }
-                                    }
-                                    //If the limit is a maximum of repetitions
-                                    else if (r.getMaximum() != -1) {
-
-                                        //Until the repetitions amount is bigger than the max
-                                        for (int i = 0; i < r.getMaximum(); i++) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (selected.isBefore(start)) {
-                                                break;
-                                            }
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
-                                        }
-                                    }
-
-                                    //If no limit
-                                    else {
-
-                                        //While the test end date is before the selected date
-                                        while (jodaSelectedDate.isAfter(jodaTestEndDate)) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
-                                        }
-                                    }
-
-                                    break;
-
-                                case WEEKLY:
-
-                                    //int start = jodaTestStartDate.dayOfWeek();
-                                    //Check if the number of the day in the week match
-                                    if (jodaSelectedDate.getDayOfWeek() != (jodaTestStartDate.getDayOfWeek()) || jodaSelectedDate.getDayOfWeek() != jodaTestEndDate.getDayOfWeek()) {
-                                        break;
-                                    }
-
-                                    //Get the limit
-                                    //If the limit is a date
-                                    if (r.getUntil() != null) {
-
-                                        //Check if the until date is smaller than the selected date
-                                        if (r.getUntil().before(selectedDate)) {
-                                            break;
-                                        }
-                                        DateTime jodaUntilDate = new DateTime(r.getUntil());
-
-                                        //Until the end test date is bigger than the day until when the event should be repeated
-                                        while (jodaUntilDate.isAfter(jodaTestEndDate.toInstant())) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (selected.isBefore(start)) {
-                                                break;
-                                            }
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
-                                        }
-                                    }
-                                    //If the limit is a maximum of repetitions
-                                    else if (r.getMaximum() > -1) {
-
-                                        //Until the repetitions amount is bigger than the max
-                                        for (int i = 0; i < r.getMaximum(); i++) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (selected.isBefore(start)) {
-                                                break;
-                                            }
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
-                                        }
-                                    }
-
-                                    //If no limit
-                                    else {
-
-                                        //While the test end date is before the selected date
-                                        while (jodaSelectedDate.isAfter(jodaTestEndDate)) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
-                                        }
-                                    }
-
-                                    break;
-
-
-                                case MONTHLY:
-
-                                    //Check if the number of the day in the month match
-                                    if (jodaSelectedDate.dayOfMonth().equals(jodaTestStartDate.dayOfMonth()) || jodaSelectedDate.dayOfMonth().equals(jodaTestEndDate.dayOfMonth())) {
-                                        break;
-                                    }
-
-                                    //Get the limit
-                                    //If the limit is a date
-                                    if (r.getUntil() != null) {
-
-                                        //Check if the until date is smaller than the selected date
-                                        if (r.getUntil().before(selectedDate)) {
-                                            break;
-                                        }
-                                        DateTime jodaUntilDate = new DateTime(r.getUntil());
-
-                                        //Until the end test date is bigger than the day until when the event should be repeated
-                                        while (jodaUntilDate.isAfter(jodaTestEndDate.toInstant())) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (selected.isBefore(start)) {
-                                                break;
-                                            }
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
-                                        }
-                                    }
-                                    //If the limit is a maximum of repetitions
-                                    else if (r.getMaximum() != -1) {
-
-                                        //Until the repetitions amount is bigger than the max
-                                        for (int i = 0; i < r.getMaximum(); i++) {
-                                            jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
-
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (selected.isBefore(start)) {
-                                                break;
-                                            }
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    //If no limit
-                                    else {
-
-                                        //While the test end date is before the selected date
-                                        while (jodaSelectedDate.isAfter(jodaTestEndDate)) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
-                                        }
-                                    }
-
-                                    break;
-                                case YEARLY:
-
-                                    //Check if the number of the day in the year match
-                                    if (jodaSelectedDate.dayOfYear().equals(jodaTestStartDate.dayOfYear()) || jodaSelectedDate.dayOfYear().equals(jodaTestEndDate.dayOfYear())) {
-                                        break;
-                                    }
-
-                                    //Get the limit
-                                    //If the limit is a date
-                                    if (r.getUntil() != null) {
-
-                                        //Check if the until date is smaller than the selected date
-                                        if (r.getUntil().before(selectedDate)) {
-                                            break;
-                                        }
-                                        DateTime jodaUntilDate = new DateTime(r.getUntil());
-
-                                        //Until the end test date is bigger than the day until when the event should be repeated
-                                        while (jodaUntilDate.isAfter(jodaTestEndDate.toInstant())) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (selected.isBefore(start)) {
-                                                break;
-                                            }
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
-                                        }
-                                    }
-                                    //If the limit is a maximum of repetitions
-                                    else if (r.getMaximum() != -1) {
-
-                                        //Until the repetitions amount is bigger than the max
-                                        for (int i = 0; i < r.getMaximum(); i++) {
-
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (selected.isBefore(start)) {
-                                                break;
-                                            }
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
-                                        }
-                                    }
-
-                                    //If no limit
-                                    else {
-
-                                        //While the test end date is before the selected date
-                                        while (jodaSelectedDate.isAfter(jodaTestEndDate)) {
-                                            start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
-                                            end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
-                                            selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
-
-                                            //If the date matches and the holiday condition is verified
-                                            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
-
-                                                //Add the event's id
-                                                validEventsIds.add(s.getEventId());
-
-                                                break;
-                                            }
-
-                                            jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
-                                            jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
-                                        }
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                //Get the events if not null
-                if(validEventsIds.size() != 0){
-                    TaskGetEventsByIds taskGetEventsByIds = new TaskGetEventsByIds();
-                    taskGetEventsByIds.delegate = getEventsByIdsAsyncReturn();
-                    taskGetEventsByIds.execute(new Pair(getActivity().getApplicationContext(), validEventsIds));
-               }
-
+                showEvents(year, month, dayOfMonth);
             }
         });
     }
 
+    /**
+     * Required for the async return in the fragment
+     * @return
+     */
     private GetEventsByIdsAsyncReturn getEventsByIdsAsyncReturn(){return this;}
 
     /**
@@ -651,5 +128,401 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                 //TODO Open details when the textview is clicked
             }
         }
+    }
+
+    /**
+     * Shows the event for the date specified
+     * @param year
+     * @param month
+     * @param dayOfMonth
+     */
+    private void showEvents(int year, int month, int dayOfMonth){
+        //Resets the events layout
+        LinearLayout layout = getView().findViewById(R.id.layoutEvents);
+        layout.removeAllViews();
+
+        //Initializes the selected date
+        Date selectedDate = new Date(year - 1900, month, dayOfMonth, 23,59,59);
+
+        //If the date is in holidays
+        boolean selectedDateDuringHolidays = false;
+
+        //Gets the schedules before the selected date
+        List<Schedule> schedulesBeforeDate = getSchedulesBeforeDate(selectedDate);
+
+        //Gets the schedules ids
+        int[] allSchedulesIds = getSchedulesId(schedulesBeforeDate);
+
+        //Gets the holidays
+        List<Holiday> holidays = getHolidays();
+
+        //Gets the ids of the holidays
+        int[] holidaysIds = getHolidaysId(holidays);
+
+        //Checks if the date is in holidays
+        for (Schedule s: schedulesBeforeDate) {
+            //If schedule is for a holiday
+            if(Arrays.asList(holidaysIds).contains(s.getEventId())){
+                //Checks if the current date is in holidays
+                if(selectedDate.equals(s.getStartDate()) || selectedDate.equals(s.getEndDate()) || (selectedDate.after(s.getStartDate()) && selectedDate.before(s.getEndDate()))){
+                    selectedDateDuringHolidays = true;
+                }
+            }
+        }
+
+        //Get the repetitions linked to the schedules
+        List<Repetition> allRepetitions = getRepetitions(allSchedulesIds);
+
+        //List to stock valid repetitions
+        List<Integer> validEventsIds = new ArrayList<>();
+
+        //Converts the selected date to a Joda DateTime (easier to work with)
+        DateTime jodaSelectedDate = new DateTime(selectedDate);
+
+        //Checks each repetition, and adds it to the valid repetitions if it corresponds to the selected date
+        for (Repetition repetition: allRepetitions){
+
+            //If the date is during holidays, check that the repetition can be done during holiday
+            if(selectedDateDuringHolidays && !repetition.getActiveDuringHolidays()){
+                //Goes to the next repetition
+                continue;
+            }
+
+            //Find the schedule linked to the repetition
+            for (Schedule schedule: schedulesBeforeDate) {
+                //Check if the schedule matches
+                if (schedule.getIdSchedule() == repetition.getScheduleId()) {
+                    //Converts the dates in joda time
+                    DateTime jodaStartDate = new DateTime(schedule.getStartDate());
+                    DateTime jodaEndDate = new DateTime(schedule.getEndDate());
+
+                    //Declare the datetimes used for comparison
+                    DateTime start = new DateTime(jodaStartDate.getYear(), jodaStartDate.getMonthOfYear(), jodaStartDate.getDayOfMonth(), 0, 0);
+                    DateTime end = new DateTime(jodaEndDate.getYear(), jodaEndDate.getMonthOfYear(), jodaEndDate.getDayOfMonth(), 0, 0);
+                    DateTime selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                    //Checks if the date matches the schedule
+                    if(checkRepetition(repetition, start, end, selected)){
+                        validEventsIds.add(schedule.getEventId());
+                    }
+                }
+            }
+        }
+
+        //Gets the events to show
+        if(validEventsIds.size() != 0){
+            TaskGetEventsByIds taskGetEventsByIds = new TaskGetEventsByIds();
+            taskGetEventsByIds.delegate = getEventsByIdsAsyncReturn();
+            taskGetEventsByIds.execute(new Pair(getActivity().getApplicationContext(), validEventsIds));
+        }
+    }
+
+    /**
+     * Gets all schedules before a date
+     * @param date
+     * @return
+     */
+    private List<Schedule> getSchedulesBeforeDate(Date date){
+        //Instance a getSchedulesBeforeDate task
+        TaskGetSchedulesBeforeDate taskGetSchedulesBeforeDate = new TaskGetSchedulesBeforeDate();
+        taskGetSchedulesBeforeDate.execute(new Pair<>(getActivity().getApplicationContext(), date));
+
+        List<Schedule> schedulesBeforeDate = new ArrayList<>();
+
+        //Get the schedules
+        try {
+            schedulesBeforeDate = taskGetSchedulesBeforeDate.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return schedulesBeforeDate;
+    }
+
+    /**
+     * Gets the ids of the schedules in a list
+     * @param schedules
+     * @return
+     */
+    private int[] getSchedulesId(List<Schedule> schedules){
+        int[] allSchedulesIds = new int[schedules.size()];
+
+        //Get the id of all schedules
+        for (int i = 0; i < schedules.size(); i++){
+            allSchedulesIds[i] = schedules.get(i).getIdSchedule();
+        }
+
+        return allSchedulesIds;
+    }
+
+    /**
+     * Gets all the holidays
+     * @return
+     */
+    private List<Holiday> getHolidays(){
+        TaskGetHolidays taskGetHolidays = new TaskGetHolidays();
+        taskGetHolidays.execute(getActivity().getApplicationContext());
+
+        List<Holiday> holidays = new ArrayList<>();
+
+        try {
+            holidays = taskGetHolidays.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return  holidays;
+    }
+
+    /**
+     * Gets the ids of the holidays in a list
+     * @param holidays
+     * @return
+     */
+    private int[] getHolidaysId(List<Holiday> holidays){
+        int[] holidaysIds = new int[holidays.size()];
+
+        //Get the ids of all the holidays
+        for(int i =0; i < holidays.size(); i++){
+            holidaysIds[i] = holidays.get(i).getIdEvent();
+        }
+
+        return holidaysIds;
+    }
+
+    /**
+     * Gets the repetitions linked to the schedules
+     * @param allSchedulesIds
+     * @return
+     */
+    private List<Repetition> getRepetitions(int[] allSchedulesIds){
+        TaskGetRepetitionsByScheduleIds taskGetRepetitionsByScheduleIds = new TaskGetRepetitionsByScheduleIds();
+        taskGetRepetitionsByScheduleIds.execute(new Pair<>(getActivity().getApplicationContext(), allSchedulesIds));
+
+        List<Repetition> allRepetitions = new ArrayList<>();
+
+        try {
+            allRepetitions = taskGetRepetitionsByScheduleIds.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return allRepetitions;
+    }
+
+    /**
+     * Checks if a selected date matches with a schedule with a limit date
+     * @param repetition
+     * @param start
+     * @param end
+     * @param selected
+     * @return
+     */
+    private boolean checkWithLimitDate(Repetition repetition, DateTime start, DateTime end, DateTime selected){
+
+        //Checks if the until date is smaller than the selected date
+        if (repetition.getUntil().before(selected.toDate())) {
+            //The selected date doesn't match
+            return false;
+        }
+
+        //Converts the limit date to Joda DateTime
+        DateTime until = new DateTime(repetition.getUntil());
+
+        //While the end date is bigger than the limit date
+        while (until.isAfter(end.toInstant())) {
+
+            //If the selected date is before the test date, break because no need to check any further
+            if (selected.isBefore(start)) {
+                break;
+            }
+
+            //If the date matches
+            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
+                return true;
+            }
+
+            //Increments the dates
+            switch (repetition.getType()){
+                case DAILY:
+                    start = start.plusDays(repetition.getAmount());
+                    end = end.plusDays(repetition.getAmount());
+                    break;
+
+                case WEEKLY:
+                    start = start.plusWeeks(repetition.getAmount());
+                    end = end.plusWeeks(repetition.getAmount());
+                    break;
+
+                case MONTHLY:
+                    start = start.plusMonths(repetition.getAmount());
+                    end = end.plusMonths(repetition.getAmount());
+                    break;
+
+                case YEARLY:
+                    start = start.plusYears(repetition.getAmount());
+                    end = end.plusYears(repetition.getAmount());
+                    break;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if a selected date matches with a schedule with a limit amount of repetitions
+     * @param repetition
+     * @param start
+     * @param end
+     * @param selected
+     * @return
+     */
+    private boolean checkWithLimitAmount(Repetition repetition, DateTime start, DateTime end, DateTime selected){
+
+        //While the repetitions counter is smaller than the max
+        for (int i = 0; i < repetition.getMaximum(); i++) {
+
+            //If the selected date is before the test date, break because no need to check any further
+            if (selected.isBefore(start)) {
+                break;
+            }
+
+            //If the date matches
+            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
+                return true;
+            }
+
+            //Increments the dates
+            switch (repetition.getType()){
+                case DAILY:
+                    start = start.plusDays(repetition.getAmount());
+                    end = end.plusDays(repetition.getAmount());
+                    break;
+
+                case WEEKLY:
+                    start = start.plusWeeks(repetition.getAmount());
+                    end = end.plusWeeks(repetition.getAmount());
+                    break;
+
+                case MONTHLY:
+                    start = start.plusMonths(repetition.getAmount());
+                    end = end.plusMonths(repetition.getAmount());
+                    break;
+
+                case YEARLY:
+                    start = start.plusYears(repetition.getAmount());
+                    end = end.plusYears(repetition.getAmount());
+                    break;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if a selected date matches with a schedule with no limit
+     * @param repetition
+     * @param start
+     * @param end
+     * @param selected
+     * @return
+     */
+    private boolean checkWithNoLimit(Repetition repetition, DateTime start, DateTime end, DateTime selected){
+
+        //While the selected date is after the end date
+        while (selected.isAfter(end) || selected.equals(end)) {
+
+            //If the date matches
+            if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
+                return true;
+            }
+
+            //Increments the dates
+            switch (repetition.getType()){
+                case DAILY:
+                    start = start.plusDays(repetition.getAmount());
+                    end = end.plusDays(repetition.getAmount());
+                    break;
+
+                case WEEKLY:
+                    start = start.plusWeeks(repetition.getAmount());
+                    end = end.plusWeeks(repetition.getAmount());
+                    break;
+
+                case MONTHLY:
+                    start = start.plusMonths(repetition.getAmount());
+                    end = end.plusMonths(repetition.getAmount());
+                    break;
+
+                case YEARLY:
+                    start = start.plusYears(repetition.getAmount());
+                    end = end.plusYears(repetition.getAmount());
+                    break;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if a selected date matches with a schedule
+     * @param repetition
+     * @param start
+     * @param end
+     * @param selected
+     * @return
+     */
+    private boolean checkRepetition(Repetition repetition, DateTime start, DateTime end, DateTime selected){
+
+        boolean matches = false;
+
+        switch (repetition.getType()){
+            case NONE:
+                //If the date matches
+                return start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end));
+            case WEEKLY:
+                //Check if the number of the day in the week match
+                if (selected.getDayOfWeek() != (start.getDayOfWeek()) || selected.getDayOfWeek() != end.getDayOfWeek()) {
+                    return false;
+                }
+                break;
+
+            case MONTHLY:
+                //Check if the number of the day in the month match
+                if (selected.dayOfMonth().equals(start.dayOfMonth()) || selected.dayOfMonth().equals(end.dayOfMonth())) {
+                    return false;
+                }
+                break;
+
+            case YEARLY:
+                //Check if the number of the day in the year match
+                if (selected.dayOfYear().equals(start.dayOfYear()) || selected.dayOfYear().equals(end.dayOfYear())) {
+                    return false;
+                }
+                break;
+        }
+
+        //If the limit is a date
+        if (repetition.getUntil() != null) {
+            matches = matches || checkWithLimitDate(repetition, start, end, selected);
+        }
+
+        //If the limit is a maximum of repetitions
+        else if (repetition.getMaximum() != -1) {
+            matches = matches || checkWithLimitAmount(repetition, start, end, selected);
+        }
+
+        //If no limit
+        else {
+            matches = matches || checkWithNoLimit(repetition, start, end, selected);
+        }
+
+        return matches;
     }
 }
