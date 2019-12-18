@@ -122,9 +122,18 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                         }
                     }
 
+
+                    //Hides error message
+                    TextView errorView = findViewById(R.id.textViewErrorMessage);
+                    if(errorView.getVisibility() == GONE){
+                        errorView.setVisibility(GONE);
+                    }
+
                     finish();
                 }else{
-                    //TODO show error message
+                    //Shows error message
+                    TextView errorView = findViewById(R.id.textViewErrorMessage);
+                    errorView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -148,7 +157,6 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
 
             switch (EventType.values()[value]) {
                 case EVENT:
-
                     //Adds a schedule fragment
                     AddScheduleFragment();
                     break;

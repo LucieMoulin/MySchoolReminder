@@ -32,5 +32,6 @@
     <string name="event">Événement</string>
     <string name="add">Ajouter</string>
     <string name="btn_remove">-</string>
+    <string name="error_message">Merci de remplir les champs avec des valeurs valides</string>
 
 </resources>
