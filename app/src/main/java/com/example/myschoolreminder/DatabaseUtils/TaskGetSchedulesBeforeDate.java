@@ -13,7 +13,7 @@ import android.util.Pair;
 
 import com.example.myschoolreminder.Objects.Schedule;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 public class TaskGetSchedulesBeforeDate extends AsyncTask<Pair<Context, Date>, Void, List<Schedule>> {

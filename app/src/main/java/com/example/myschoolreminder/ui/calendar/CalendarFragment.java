@@ -22,6 +22,7 @@ import com.example.myschoolreminder.DatabaseUtils.TaskGetEvents;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetEventsByIds;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetHolidays;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetRepetitionsByScheduleIds;
+import com.example.myschoolreminder.DatabaseUtils.TaskGetSchedules;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetSchedulesBeforeDate;
 import com.example.myschoolreminder.EventTypeMenuActivity;
 import com.example.myschoolreminder.Objects.Event;
@@ -34,7 +35,7 @@ import com.example.myschoolreminder.R;
 import org.joda.time.DateTime;
 import org.w3c.dom.Text;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,6 +91,18 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
             e.printStackTrace();
         }
 
+        TaskGetSchedules taskGetSchedules = new TaskGetSchedules();
+        taskGetSchedules.execute(getActivity().getApplicationContext());
+
+        List<Schedule> allSchedules = new ArrayList<>();
+
+        try {
+            allSchedules = taskGetSchedules.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //Get the calendar widget
         CalendarView calendar = view.findViewById(R.id.calendarView);
 
@@ -108,7 +121,10 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                 LinearLayout layout = getView().findViewById(R.id.layoutEvents);
                 layout.removeAllViews();
 
-                Date selectedDate = new Date(year - 1900, month, dayOfMonth);
+                DateTime tempDate = new DateTime(year, month + 1, dayOfMonth, 0, 0,0);
+                tempDate = tempDate.plusDays(1);
+
+                Date selectedDate = tempDate.toDate();
 
                 //If the date is in holidays
                 boolean isDuringHolidays = false;
@@ -243,14 +259,14 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                             jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
                                             jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
 
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (jodaSelectedDate.isBefore(jodaTestStartDate)) {
-                                                break;
-                                            }
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                                            //If the selected date is before the test date, break because no need to check more
+                                            if (selected.isBefore(start)) {
+                                                break;
+                                            }
 
                                             //If the date matches and the holiday condition is verified
                                             if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
@@ -270,14 +286,14 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                             jodaTestStartDate = jodaTestStartDate.plusDays(r.getAmount());
                                             jodaTestEndDate = jodaTestEndDate.plusDays(r.getAmount());
 
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (jodaSelectedDate.isBefore(jodaTestStartDate)) {
-                                                break;
-                                            }
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                                            //If the selected date is before the test date, break because no need to check more
+                                            if (selected.isBefore(start)) {
+                                                break;
+                                            }
 
                                             //If the date matches and the holiday condition is verified
                                             if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
@@ -338,14 +354,14 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                             jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
                                             jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
 
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (jodaSelectedDate.isBefore(jodaTestStartDate)) {
-                                                break;
-                                            }
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                                            //If the selected date is before the test date, break because no need to check more
+                                            if (selected.isBefore(start)) {
+                                                break;
+                                            }
 
                                             //If the date matches and the holiday condition is verified
                                             if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
@@ -365,14 +381,14 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                             jodaTestStartDate = jodaTestStartDate.plusWeeks(r.getAmount());
                                             jodaTestEndDate = jodaTestEndDate.plusWeeks(r.getAmount());
 
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (jodaSelectedDate.isBefore(jodaTestStartDate)) {
-                                                break;
-                                            }
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                                            //If the selected date is before the test date, break because no need to check more
+                                            if (selected.isBefore(start)) {
+                                                break;
+                                            }
 
                                             //If the date matches and the holiday condition is verified
                                             if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
@@ -433,14 +449,14 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                             jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
                                             jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
 
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (jodaSelectedDate.isBefore(jodaTestStartDate)) {
-                                                break;
-                                            }
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                                            //If the selected date is before the test date, break because no need to check more
+                                            if (selected.isBefore(start)) {
+                                                break;
+                                            }
 
                                             //If the date matches and the holiday condition is verified
                                             if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
@@ -460,14 +476,14 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                             jodaTestStartDate = jodaTestStartDate.plusMonths(r.getAmount());
                                             jodaTestEndDate = jodaTestEndDate.plusMonths(r.getAmount());
 
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (jodaSelectedDate.isBefore(jodaTestStartDate)) {
-                                                break;
-                                            }
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                                            //If the selected date is before the test date, break because no need to check more
+                                            if (selected.isBefore(start)) {
+                                                break;
+                                            }
 
                                             //If the date matches and the holiday condition is verified
                                             if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
@@ -526,14 +542,14 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                             jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
                                             jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
 
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (jodaSelectedDate.isBefore(jodaTestStartDate)) {
-                                                break;
-                                            }
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                                            //If the selected date is before the test date, break because no need to check more
+                                            if (selected.isBefore(start)) {
+                                                break;
+                                            }
 
                                             //If the date matches and the holiday condition is verified
                                             if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
@@ -553,14 +569,14 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                                             jodaTestStartDate = jodaTestStartDate.plusYears(r.getAmount());
                                             jodaTestEndDate = jodaTestEndDate.plusYears(r.getAmount());
 
-                                            //If the selected date is before the test date, break because no need to check more
-                                            if (jodaSelectedDate.isBefore(jodaTestStartDate)) {
-                                                break;
-                                            }
-
                                             start = new DateTime(jodaTestStartDate.getYear(), jodaTestStartDate.getMonthOfYear(), jodaTestStartDate.getDayOfMonth(), 0, 0);
                                             end = new DateTime(jodaTestEndDate.getYear(), jodaTestEndDate.getMonthOfYear(), jodaTestEndDate.getDayOfMonth(), 0, 0);
                                             selected = new DateTime(jodaSelectedDate.getYear(), jodaSelectedDate.getMonthOfYear(), jodaSelectedDate.getDayOfMonth(), 0, 0);
+
+                                            //If the selected date is before the test date, break because no need to check more
+                                            if (selected.isBefore(start)) {
+                                                break;
+                                            }
 
                                             //If the date matches and the holiday condition is verified
                                             if (start.equals(selected) || end.equals(selected) || (selected.isAfter(start) && selected.isBefore(end))) {
