@@ -540,7 +540,7 @@ public class ScheduleFragment extends Fragment {
                 //Gets the maximum of repetitions entered
                 int maximumOfRepetitions = Integer.parseInt(((EditText)getView().findViewById(R.id.editTextLimitAmount)).getText().toString());
 
-                //Returns new repetition with maimum amount of repetitions
+                //Returns new repetition with maximum amount of repetitions
                 return new Repetition(scheduleId, type, amount, maximumOfRepetitions, isActiveDuringHolidays);
         }
     }

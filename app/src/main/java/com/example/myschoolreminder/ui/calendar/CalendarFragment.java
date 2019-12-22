@@ -147,7 +147,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         int[] allSchedulesIds = getSchedulesId(schedulesBeforeDate);
 
         //Gets the holidays
-        selectedDateDuringHolidays = IsDuringHolidays(selectedDate);
+        selectedDateDuringHolidays = isDuringHolidays(selectedDate);
 
 
         //Get the repetitions linked to the schedules
@@ -241,7 +241,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
      * Check if the selected date is during holidays
      * @return
      */
-    private Boolean IsDuringHolidays(Date selectedDate){
+    private Boolean isDuringHolidays(Date selectedDate){
         TaskIsSelectedDateDuringHolidays taskIsSelectedDateDuringHolidays = new TaskIsSelectedDateDuringHolidays();
         taskIsSelectedDateDuringHolidays.execute(new Pair<>(getActivity().getApplicationContext(),selectedDate));
 
@@ -256,22 +256,6 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         }
 
         return  isDuringHolidays > 0;
-    }
-
-    /**
-     * Gets the ids of the holidays in a list
-     * @param holidays
-     * @return
-     */
-    private int[] getHolidaysId(List<Holiday> holidays){
-        int[] holidaysIds = new int[holidays.size()];
-
-        //Get the ids of all the holidays
-        for(int i =0; i < holidays.size(); i++){
-            holidaysIds[i] = holidays.get(i).getIdEvent();
-        }
-
-        return holidaysIds;
     }
 
     /**
@@ -315,8 +299,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         //Converts the limit date to Joda DateTime
         DateTime until = new DateTime(repetition.getUntil());
 
-        //While the end date is bigger than the limit date
-        while (until.isAfter(end.toInstant())) {
+
+        //While the end date is bigger than the limit date or is the limit date
+        while (until.isAfter(end.toInstant()) || until.isEqual(end.toInstant())) {
 
             //If the selected date is before the test date, break because no need to check any further
             if (selected.isBefore(start)) {
