@@ -6,22 +6,23 @@
  */
 package com.example.myschoolreminder;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Pair;
-
-import com.example.myschoolreminder.DatabaseUtils.TaskAddTeacher;
-import com.example.myschoolreminder.Objects.Teacher;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * When the view is being created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +36,18 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+    }
+
+    public void onMove(){
+        //TODO: To make the sensor change page, need to change the bottom nav to implement frame layout
+        try{
+            FragmentManager manager = getSupportFragmentManager();
+            //manager.beginTransaction().add(R.id.nav_host_fragment, new CountdownFragment()).addToBackStack(null).commit();
+
+        }catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

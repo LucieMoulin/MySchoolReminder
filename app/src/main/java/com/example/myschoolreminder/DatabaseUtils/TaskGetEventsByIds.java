@@ -2,7 +2,7 @@
  * ETML
  * Authors : Lucie Moulin and Léa Cherpillod
  * Date : 13.11.2019
- * Description : Task getting events
+ * Description : Task getting events by id
  */
 
 package com.example.myschoolreminder.DatabaseUtils;

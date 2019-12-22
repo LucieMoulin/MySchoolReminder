@@ -1,3 +1,9 @@
+/**
+ * ETML
+ * Authors : Lucie Moulin and Léa Cherpillod
+ * Date : 06.11.2019
+ * Description : The Calendar view model
+ */
 package com.example.myschoolreminder.ui.calendar;
 
 import androidx.lifecycle.LiveData;

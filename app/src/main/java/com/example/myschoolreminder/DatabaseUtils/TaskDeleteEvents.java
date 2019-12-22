@@ -2,7 +2,7 @@
  * ETML
  * Authors : Lucie Moulin and Léa Cherpillod
  * Date : 11.12.2019
- * Description : Task getting teachers
+ * Description : Task to delete events
  */
 
 package com.example.myschoolreminder.DatabaseUtils;

@@ -21,6 +21,10 @@ import java.util.ArrayList;
 
 public class EventTypeMenuActivity extends AppCompatActivity {
 
+    /**
+     * When the view is being created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +56,7 @@ public class EventTypeMenuActivity extends AppCompatActivity {
             layout.addView(btnAddElement);
         }
 
-        //gets all the ids
+        //Gets all the ids
         int[] ids = new int[buttons.size()];
         for (int i = 0; i < buttons.size(); i++) {
             ids[i] = buttons.get(i).getId();

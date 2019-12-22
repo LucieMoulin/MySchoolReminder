@@ -2,7 +2,7 @@
  * ETML
  * Authors : Lucie Moulin and Léa Cherpillod
  * Date : 15.12.2019
- * Description : Task getting holidays
+ * Description : Task getting if a date is in holidays
  */
 
 package com.example.myschoolreminder.DatabaseUtils;
