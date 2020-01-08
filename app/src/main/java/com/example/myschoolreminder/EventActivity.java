@@ -6,6 +6,7 @@
  */
 
 package com.example.myschoolreminder;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Pair;
@@ -26,7 +27,6 @@ import com.example.myschoolreminder.DatabaseUtils.TaskGetTeachers;
 import com.example.myschoolreminder.Objects.Class;
 import com.example.myschoolreminder.Objects.Event;
 import com.example.myschoolreminder.Objects.EventType;
-import com.example.myschoolreminder.Objects.Reminder;
 import com.example.myschoolreminder.Objects.Repetition;
 import com.example.myschoolreminder.Objects.Schedule;
 import com.example.myschoolreminder.Objects.Teacher;
@@ -35,8 +35,6 @@ import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetTeachersAsyn
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static android.view.View.GONE;
 
@@ -191,7 +189,7 @@ public class EventActivity extends AppCompatActivity implements ScheduleFragment
                     classSpinner.setVisibility(View.VISIBLE);
 
                     //Gets the classes
-                    Class[] rawClasses = new Class[1];//Todo récupérer toutes les cours
+                    Class[] rawClasses = new Class[1];//Todo récupérer tous les cours
                     String[] classes = new String[rawClasses.length];
 
                     for(int i = 0; i < rawClasses.length; i++){

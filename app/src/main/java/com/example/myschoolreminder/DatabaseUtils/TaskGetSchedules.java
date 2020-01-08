@@ -10,9 +10,7 @@ package com.example.myschoolreminder.DatabaseUtils;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.myschoolreminder.Objects.Holiday;
 import com.example.myschoolreminder.Objects.Schedule;
-import com.example.myschoolreminder.ScheduleFragment;
 
 import java.util.List;
 

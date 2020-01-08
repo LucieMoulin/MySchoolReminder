@@ -1,3 +1,9 @@
+/**
+ * ETML
+ * Authors : Lucie Moulin and Léa Cherpillod
+ * Date : 06.11.2019
+ * Description : The reminder view model
+ */
 package com.example.myschoolreminder.ui.reminder;
 
 import androidx.lifecycle.LiveData;

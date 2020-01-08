@@ -1,3 +1,9 @@
+/**
+ * ETML
+ * Authors : Lucie Moulin and Léa Cherpillod
+ * Date : 06.11.2019
+ * Description : The countdown view model
+ */
 package com.example.myschoolreminder.ui.countdown;
 
 import androidx.lifecycle.LiveData;
@@ -10,7 +16,6 @@ public class CountdownViewModel extends ViewModel {
 
     public CountdownViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is countdown fragment");
     }
 
     public LiveData<String> getText() {

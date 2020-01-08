@@ -1,3 +1,9 @@
+/**
+ * ETML
+ * Authors : Lucie Moulin and Léa Cherpillod
+ * Date : 06.11.2019
+ * Description : The reminder fragment
+ */
 package com.example.myschoolreminder.ui.reminder;
 
 import android.os.Bundle;
@@ -18,6 +24,13 @@ public class ReminderFragment extends Fragment {
 
     private ReminderViewModel reminderViewModel;
 
+    /**
+     * When the view is being creating
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         reminderViewModel =

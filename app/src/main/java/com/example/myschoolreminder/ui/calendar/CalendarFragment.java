@@ -1,6 +1,17 @@
+/**
+ * ETML
+ * Authors : Lucie Moulin and Léa Cherpillod
+ * Date : 06.11.2019
+ * Description : The Calendar fragment
+ */
 package com.example.myschoolreminder.ui.calendar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -8,44 +19,51 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.myschoolreminder.DatabaseUtils.TaskDeleteEvents;
-import com.example.myschoolreminder.DatabaseUtils.TaskGetEvents;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetEventsByIds;
-import com.example.myschoolreminder.DatabaseUtils.TaskGetHolidays;
+import com.example.myschoolreminder.DatabaseUtils.TaskIsSelectedDateDuringHolidays;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetRepetitionsByScheduleIds;
-import com.example.myschoolreminder.DatabaseUtils.TaskGetSchedules;
 import com.example.myschoolreminder.DatabaseUtils.TaskGetSchedulesBeforeDate;
 import com.example.myschoolreminder.EventTypeMenuActivity;
+import com.example.myschoolreminder.MainActivity;
 import com.example.myschoolreminder.Objects.Event;
-import com.example.myschoolreminder.Objects.Holiday;
 import com.example.myschoolreminder.Objects.Repetition;
 import com.example.myschoolreminder.Objects.Schedule;
 import com.example.myschoolreminder.ObjectsAsyncReturnInterfaces.GetEventsByIdsAsyncReturn;
 import com.example.myschoolreminder.R;
-
 import org.joda.time.DateTime;
-import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncReturn {
+public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncReturn, SensorEventListener {
 
     private CalendarViewModel calendarViewModel;
 
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+
+    private long lastUpdate = 0;
+    private float last_x, last_y, last_z;
+    private static final int SHAKE_THRESHOLD = 600;
+
+
+    /**
+     * When the view is being created
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         calendarViewModel = ViewModelProviders.of(this).get(CalendarViewModel.class);
         View root = inflater.inflate(R.layout.fragment_calendar, container, false);
@@ -97,17 +115,28 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
                 showEvents(year, month, dayOfMonth);
             }
         });
+
+
+        //Initialize the sensor manager
+        sensorManager = (SensorManager)getActivity().getSystemService(Context.SENSOR_SERVICE);
+
+        //Set the sensor as an accelerometer
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        //Register the sensor to the sensor manager
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
+
 
     /**
      * Required for the async return in the fragment
-     * @return
+     * @return the instance of the interface
      */
     private GetEventsByIdsAsyncReturn getEventsByIdsAsyncReturn(){return this;}
 
     /**
      * Return the events by ids, and shows them
-     * @param output
+     * @param output The list of events
      */
     @Override
     public void returnEventsByIds(List<Event> output) {
@@ -132,9 +161,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
     /**
      * Shows the event for the date specified
-     * @param year
-     * @param month
-     * @param dayOfMonth
+     * @param year The selected date's year
+     * @param month The selected date's month
+     * @param dayOfMonth The selected date's day
      */
     private void showEvents(int year, int month, int dayOfMonth){
         //Resets the events layout
@@ -154,21 +183,8 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         int[] allSchedulesIds = getSchedulesId(schedulesBeforeDate);
 
         //Gets the holidays
-        List<Holiday> holidays = getHolidays();
+        selectedDateDuringHolidays = isDuringHolidays(selectedDate);
 
-        //Gets the ids of the holidays
-        int[] holidaysIds = getHolidaysId(holidays);
-
-        //Checks if the date is in holidays
-        for (Schedule s: schedulesBeforeDate) {
-            //If schedule is for a holiday
-            if(Arrays.asList(holidaysIds).contains(s.getEventId())){
-                //Checks if the current date is in holidays
-                if(selectedDate.equals(s.getStartDate()) || selectedDate.equals(s.getEndDate()) || (selectedDate.after(s.getStartDate()) && selectedDate.before(s.getEndDate()))){
-                    selectedDateDuringHolidays = true;
-                }
-            }
-        }
 
         //Get the repetitions linked to the schedules
         List<Repetition> allRepetitions = getRepetitions(allSchedulesIds);
@@ -219,8 +235,8 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
     /**
      * Gets all schedules before a date
-     * @param date
-     * @return
+     * @param date The date before which the event will be looked for
+     * @return The list of schedules
      */
     private List<Schedule> getSchedulesBeforeDate(Date date){
         //Instance a getSchedulesBeforeDate task
@@ -244,7 +260,7 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
     /**
      * Gets the ids of the schedules in a list
      * @param schedules
-     * @return
+     * @return Array of the schedules id's
      */
     private int[] getSchedulesId(List<Schedule> schedules){
         int[] allSchedulesIds = new int[schedules.size()];
@@ -258,46 +274,30 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
     }
 
     /**
-     * Gets all the holidays
-     * @return
+     * Check if the selected date is during holidays
+     * @return if the date is during holidays
      */
-    private List<Holiday> getHolidays(){
-        TaskGetHolidays taskGetHolidays = new TaskGetHolidays();
-        taskGetHolidays.execute(getActivity().getApplicationContext());
+    private Boolean isDuringHolidays(Date selectedDate){
+        TaskIsSelectedDateDuringHolidays taskIsSelectedDateDuringHolidays = new TaskIsSelectedDateDuringHolidays();
+        taskIsSelectedDateDuringHolidays.execute(new Pair<>(getActivity().getApplicationContext(),selectedDate));
 
-        List<Holiday> holidays = new ArrayList<>();
+        int isDuringHolidays = 0;
 
         try {
-            holidays = taskGetHolidays.get();
+            isDuringHolidays = taskIsSelectedDateDuringHolidays.get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        return  holidays;
-    }
-
-    /**
-     * Gets the ids of the holidays in a list
-     * @param holidays
-     * @return
-     */
-    private int[] getHolidaysId(List<Holiday> holidays){
-        int[] holidaysIds = new int[holidays.size()];
-
-        //Get the ids of all the holidays
-        for(int i =0; i < holidays.size(); i++){
-            holidaysIds[i] = holidays.get(i).getIdEvent();
-        }
-
-        return holidaysIds;
+        return  isDuringHolidays > 0;
     }
 
     /**
      * Gets the repetitions linked to the schedules
-     * @param allSchedulesIds
-     * @return
+     * @param allSchedulesIds The array with all the schedules ids
+     * @return The list of repetitions matching the event ids
      */
     private List<Repetition> getRepetitions(int[] allSchedulesIds){
         TaskGetRepetitionsByScheduleIds taskGetRepetitionsByScheduleIds = new TaskGetRepetitionsByScheduleIds();
@@ -318,10 +318,10 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
     /**
      * Checks if a selected date matches with a schedule with a limit date
-     * @param repetition
-     * @param start
-     * @param end
-     * @param selected
+     * @param repetition The repetition to check
+     * @param start The start date of the event
+     * @param end The end date of the event
+     * @param selected The selected date
      * @return
      */
     private boolean checkWithLimitDate(Repetition repetition, DateTime start, DateTime end, DateTime selected){
@@ -335,8 +335,9 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         //Converts the limit date to Joda DateTime
         DateTime until = new DateTime(repetition.getUntil());
 
-        //While the end date is bigger than the limit date
-        while (until.isAfter(end.toInstant())) {
+
+        //While the end date is bigger than the limit date or is the limit date
+        while (until.isAfter(end.toInstant()) || until.isEqual(end.toInstant())) {
 
             //If the selected date is before the test date, break because no need to check any further
             if (selected.isBefore(start)) {
@@ -377,10 +378,10 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
     /**
      * Checks if a selected date matches with a schedule with a limit amount of repetitions
-     * @param repetition
-     * @param start
-     * @param end
-     * @param selected
+     * @param repetition The repetition to check
+     * @param start The start date of the event
+     * @param end The end date of the event
+     * @param selected The selected date
      * @return
      */
     private boolean checkWithLimitAmount(Repetition repetition, DateTime start, DateTime end, DateTime selected){
@@ -427,10 +428,10 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
     /**
      * Checks if a selected date matches with a schedule with no limit
-     * @param repetition
-     * @param start
-     * @param end
-     * @param selected
+     * @param repetition The repetition to check
+     * @param start The start date of the event
+     * @param end The end date of the event
+     * @param selected The selected date
      * @return
      */
     private boolean checkWithNoLimit(Repetition repetition, DateTime start, DateTime end, DateTime selected){
@@ -472,10 +473,10 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
 
     /**
      * Checks if a selected date matches with a schedule
-     * @param repetition
-     * @param start
-     * @param end
-     * @param selected
+     * @param repetition The repetition to check
+     * @param start The start date of the event
+     * @param end The end date of the event
+     * @param selected The selected date
      * @return
      */
     private boolean checkRepetition(Repetition repetition, DateTime start, DateTime end, DateTime selected){
@@ -524,5 +525,77 @@ public class CalendarFragment extends Fragment implements GetEventsByIdsAsyncRet
         }
 
         return matches;
+    }
+
+
+    /**
+     * When there's a new event on the sensor
+     * @param sensorEvent The sensor event
+     */
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+        //Get the sensor that changed
+        Sensor mySensor = sensorEvent.sensor;
+
+        //If the sensor is the accelerometer
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
+            //Save the new x, y, z values
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+
+            //Get current time
+            long curTime = System.currentTimeMillis();
+
+            //Get the difference between now and the last update
+            long diffTime = (curTime - lastUpdate);
+
+            //Set the new as the last update
+            lastUpdate = curTime;
+
+            //Calculate the speed of the movement
+            float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+
+            //If it's bigger than the shake threshold
+            if (speed > SHAKE_THRESHOLD) {
+
+                //TODO: Launch
+                try{
+                    ((MainActivity)getActivity()).onMove();
+
+                }catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            last_x = x;
+            last_y = y;
+            last_z = z;
+        }
+    }
+
+    /**
+     * When the accuracy of the sensor changed
+     * @param sensor The sensor
+     * @param accuracy The current accuracy
+     */
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //This function is mandatory in the implementation, but we don't need to do anything with it at this points
+        //Just nothing
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
