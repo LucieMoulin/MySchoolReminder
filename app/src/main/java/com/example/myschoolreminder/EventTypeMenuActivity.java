@@ -30,22 +30,35 @@ public class EventTypeMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_type_menu);
 
+        CreateLayout();
+    }
+
+    /**
+     * Creates the buttons for the event creation
+     */
+    private void CreateLayout(){
         //Gets the repetition types
         final EventType[] rawTypes = EventType.values();
         ArrayList<Button> buttons = new ArrayList<Button>();
 
-        //Layout
+        //Creates the layout
         ConstraintLayout layout = findViewById(R.id.eventTypeMenuLayout);
 
-        //Creates all the buttons
+        //Create a button for each event type
         for (final EventType type : EventType.values()) {
             Button btnAddElement = new Button(getApplicationContext());
             btnAddElement.setText(type.getName());
             btnAddElement.setId(View.generateViewId());
 
+            //Adds the click listener
             btnAddElement.setOnClickListener(new View.OnClickListener() {
+                /**
+                 * Is executed on click
+                 * @param view
+                 */
                 @Override
                 public void onClick(View view) {
+                    //Opens the Event activity with the event type selected
                     Intent intent = new Intent(EventTypeMenuActivity.this, EventActivity.class);
                     intent.putExtra("eventType", type.ordinal());
                     startActivity(intent);
@@ -56,17 +69,20 @@ public class EventTypeMenuActivity extends AppCompatActivity {
             layout.addView(btnAddElement);
         }
 
-        //Gets all the ids
+        //Gets all the ids of the buttons
         int[] ids = new int[buttons.size()];
         for (int i = 0; i < buttons.size(); i++) {
             ids[i] = buttons.get(i).getId();
         }
 
+        //Creates a constraint layout set
         ConstraintSet set = new ConstraintSet();
         set.clone(layout);
 
+        //Creates vertical chain containing the buttons
         set.createVerticalChain(R.id.txtEventTypeTitle, ConstraintSet.BOTTOM, layout.getId(), ConstraintSet.BOTTOM, ids, null, ConstraintSet.CHAIN_SPREAD);
 
+        //Centers each button horizontally
         for (Button button : buttons) {
             set.centerHorizontally(button.getId(), layout.getId());
         }
